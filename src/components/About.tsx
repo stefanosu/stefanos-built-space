@@ -37,31 +37,26 @@ const About = () => {
           </div>
           
           <div className="bg-card rounded-xl p-12 shadow-medium border border-border/50">
-            <div className="flex flex-col md:flex-row gap-12 items-center">
-              <div className="w-48 h-48 bg-secondary rounded-full flex items-center justify-center text-6xl font-bold text-muted-foreground flex-shrink-0">
-                SU
-              </div>
+            <h3 className="text-2xl font-semibold mb-6">About Me</h3>
+            <div className="space-y-6">
+              <p className="text-lg leading-relaxed">
+                I'm a full-stack software engineer with deep experience in building 
+                scalable, maintainable systems. My work spans <span className="text-accent font-medium">.NET / C#</span> backend 
+                development, <span className="text-accent font-medium">React / Next.js</span> front-end applications, and 
+                cloud architecture with distributed systems.
+              </p>
               
-              <div className="flex-1 space-y-6">
-                <p className="text-lg leading-relaxed">
-                  I'm a full-stack software engineer with deep experience in building 
-                  scalable, maintainable systems. My work spans <span className="text-accent font-medium">.NET / C#</span> backend 
-                  development, <span className="text-accent font-medium">React / Next.js</span> front-end applications, and 
-                  cloud architecture with distributed systems.
-                </p>
-                
-                <p className="text-lg leading-relaxed">
-                  I'm passionate about building technology that empowers growth, strengthens 
-                  community, and enables learning. I write about software craftsmanship, 
-                  clean architecture, and personal development — and I believe in the power 
-                  of mentorship and giving back to the tech community.
-                </p>
-                
-                <p className="text-lg leading-relaxed">
-                  Outside of engineering, you'll find me training in boxing, exploring fitness, 
-                  writing poetry, focusing on personal growth, and traveling to new places.
-                </p>
-              </div>
+              <p className="text-lg leading-relaxed">
+                I'm passionate about building technology that empowers growth, strengthens 
+                community, and enables learning. I write about software craftsmanship, 
+                clean architecture, and personal development — and I believe in the power 
+                of mentorship and giving back to the tech community.
+              </p>
+              
+              <p className="text-lg leading-relaxed">
+                Outside of engineering, you'll find me training in boxing, exploring fitness, 
+                writing poetry, focusing on personal growth, and traveling to new places.
+              </p>
             </div>
           </div>
         </div>
