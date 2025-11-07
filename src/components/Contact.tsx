@@ -20,26 +20,26 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 bg-gradient-subtle">
+    <section id="contact" className="py-24 md:py-24 py-16 bg-gradient-subtle">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Get in Touch</h2>
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-4xl md:text-5xl font-semibold mb-4">Get in Touch</h2>
             <p className="text-lg text-muted-foreground">
               Have a project in mind or just want to connect? Let's talk.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-12">
+          <div className="grid md:grid-cols-2 gap-12 animate-slide-up">
             <div className="space-y-8">
               <div>
                 <h3 className="text-2xl font-semibold mb-6">Connect</h3>
                 <div className="space-y-4">
                   <a 
                     href="mailto:stefanos@example.com"
-                    className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors group"
+                    className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-all duration-300 group"
                   >
-                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                    <div className="w-10 h-10 rounded-full bg-card flex items-center justify-center group-hover:bg-accent/20 transition-all duration-300">
                       <Mail className="w-5 h-5" />
                     </div>
                     <span>stefanos@example.com</span>
@@ -49,9 +49,9 @@ const Contact = () => {
                     href="https://linkedin.com/in/stefanos-ugbit"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors group"
+                    className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-all duration-300 group"
                   >
-                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                    <div className="w-10 h-10 rounded-full bg-card flex items-center justify-center group-hover:bg-accent/20 transition-all duration-300">
                       <Linkedin className="w-5 h-5" />
                     </div>
                     <span>LinkedIn</span>
@@ -61,9 +61,9 @@ const Contact = () => {
                     href="https://github.com/stefanos-ugbit"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors group"
+                    className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-all duration-300 group"
                   >
-                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                    <div className="w-10 h-10 rounded-full bg-card flex items-center justify-center group-hover:bg-accent/20 transition-all duration-300">
                       <Github className="w-5 h-5" />
                     </div>
                     <span>GitHub</span>
@@ -80,7 +80,7 @@ const Contact = () => {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
-                    className="bg-card border-border"
+                    className="bg-card border-border focus:border-accent transition-colors duration-300"
                   />
                 </div>
                 
@@ -91,7 +91,7 @@ const Contact = () => {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
-                    className="bg-card border-border"
+                    className="bg-card border-border focus:border-accent transition-colors duration-300"
                   />
                 </div>
                 
@@ -102,14 +102,14 @@ const Contact = () => {
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     required
                     rows={6}
-                    className="bg-card border-border resize-none"
+                    className="bg-card border-border resize-none focus:border-accent transition-colors duration-300"
                   />
                 </div>
                 
                 <Button 
                   type="submit"
                   size="lg"
-                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-medium"
+                  className="w-full"
                 >
                   <Send className="w-4 h-4 mr-2" />
                   Send Message

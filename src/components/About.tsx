@@ -2,13 +2,13 @@ import { Code2, Palette, Heart } from "lucide-react";
 
 const About = () => {
   return (
-    <section id="about" className="py-24 bg-gradient-subtle">
+    <section id="about" className="py-24 md:py-24 py-16 bg-gradient-subtle">
       <div className="container mx-auto px-6">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">About Me</h2>
+          <h2 className="text-4xl md:text-5xl font-semibold mb-16 text-center animate-fade-in">About Me</h2>
           
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <div className="bg-card rounded-xl p-8 shadow-soft border border-border/50">
+          <div className="grid md:grid-cols-3 gap-8 mb-16 animate-slide-up">
+            <div className="bg-card rounded-2xl p-8 shadow-soft border border-border/50 hover:border-accent/30 transition-all duration-300">
               <Code2 className="w-10 h-10 text-accent mb-4" />
               <h3 className="text-xl font-semibold mb-3">Engineering</h3>
               <p className="text-muted-foreground leading-relaxed">
@@ -17,7 +17,7 @@ const About = () => {
               </p>
             </div>
             
-            <div className="bg-card rounded-xl p-8 shadow-soft border border-border/50">
+            <div className="bg-card rounded-2xl p-8 shadow-soft border border-border/50 hover:border-accent/30 transition-all duration-300">
               <Palette className="w-10 h-10 text-accent mb-4" />
               <h3 className="text-xl font-semibold mb-3">Passions</h3>
               <p className="text-muted-foreground leading-relaxed">
@@ -26,7 +26,7 @@ const About = () => {
               </p>
             </div>
             
-            <div className="bg-card rounded-xl p-8 shadow-soft border border-border/50">
+            <div className="bg-card rounded-2xl p-8 shadow-soft border border-border/50 hover:border-accent/30 transition-all duration-300">
               <Heart className="w-10 h-10 text-accent mb-4" />
               <h3 className="text-xl font-semibold mb-3">Beyond Code</h3>
               <p className="text-muted-foreground leading-relaxed">
@@ -36,26 +36,18 @@ const About = () => {
             </div>
           </div>
           
-          <div className="bg-card rounded-xl p-12 shadow-medium border border-border/50">
-            <h3 className="text-2xl font-semibold mb-6">About Me</h3>
-            <div className="space-y-6">
+          <div className="bg-card rounded-2xl p-12 shadow-medium border border-border/50 animate-slide-up">
+            <div className="max-w-3xl mx-auto space-y-6">
               <p className="text-lg leading-relaxed">
-                I'm a full-stack software engineer with deep experience in building 
-                scalable, maintainable systems. My work spans <span className="text-accent font-medium">.NET / C#</span> backend 
-                development, <span className="text-accent font-medium">React / Next.js</span> front-end applications, and 
-                cloud architecture with distributed systems.
+                I'm a software engineer who cares about building things the right way — with clarity, clean architecture, and thoughtful execution. I enjoy working across the stack, from .NET and C# on the backend to React and Next.js on the frontend, with a focus on maintainability and user experience.
               </p>
               
               <p className="text-lg leading-relaxed">
-                I'm passionate about building technology that empowers growth, strengthens 
-                community, and enables learning. I write about software craftsmanship, 
-                clean architecture, and personal development — and I believe in the power 
-                of mentorship and giving back to the tech community.
+                I'm especially interested in how technology can support learning, community, and growth. I value simple solutions, clear communication, and writing code that's easy to understand and extend.
               </p>
               
               <p className="text-lg leading-relaxed">
-                Outside of engineering, you'll find me training in boxing, exploring fitness, 
-                writing poetry, focusing on personal growth, and traveling to new places.
+                Outside of engineering, I'm committed to personal development. I box, train, read, and write — and I try to approach my work and life with presence, patience, and discipline.
               </p>
             </div>
           </div>

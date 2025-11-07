@@ -37,9 +37,9 @@ const BlogPost = () => {
       <Header />
       
       <main className="flex-1 pt-24">
-        <article className="container mx-auto px-6 py-16">
+        <article className="container mx-auto px-6 py-16 md:py-24">
           <div className="max-w-3xl mx-auto">
-            <Button asChild variant="ghost" className="mb-8 -ml-4">
+            <Button asChild variant="ghost" className="mb-8 -ml-4 hover:text-accent">
               <Link to="/writing">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Writing
@@ -58,7 +58,7 @@ const BlogPost = () => {
                 </span>
               </div>
               
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+              <h1 className="text-4xl md:text-5xl font-semibold mb-6 leading-tight">
                 {post.title}
               </h1>
               
@@ -66,7 +66,7 @@ const BlogPost = () => {
                 {post.tags.map((tag, index) => (
                   <span 
                     key={index}
-                    className="px-3 py-1 bg-secondary text-sm rounded-full text-foreground/80"
+                    className="px-3 py-1 bg-card border border-border/50 text-sm rounded-full text-foreground/80"
                   >
                     {tag}
                   </span>
@@ -95,7 +95,7 @@ const BlogPost = () => {
                       </code>
                     );
                   },
-                  h1: ({ children }) => <h1 className="text-4xl font-bold mb-6 mt-12">{children}</h1>,
+                  h1: ({ children }) => <h1 className="text-4xl font-semibold mb-6 mt-12">{children}</h1>,
                   h2: ({ children }) => <h2 className="text-3xl font-semibold mb-4 mt-10">{children}</h2>,
                   h3: ({ children }) => <h3 className="text-2xl font-semibold mb-3 mt-8">{children}</h3>,
                   p: ({ children }) => <p className="text-foreground/90 leading-relaxed mb-6">{children}</p>,
@@ -103,7 +103,7 @@ const BlogPost = () => {
                   ol: ({ children }) => <ol className="list-decimal list-inside space-y-2 mb-6 ml-4">{children}</ol>,
                   li: ({ children }) => <li className="text-foreground/90">{children}</li>,
                   a: ({ children, href }) => (
-                    <a href={href} className="text-accent hover:underline font-medium">
+                    <a href={href} className="text-accent hover:text-accent-hover underline-offset-2 hover:underline font-medium transition-colors duration-300">
                       {children}
                     </a>
                   ),

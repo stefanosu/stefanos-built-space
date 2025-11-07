@@ -9,7 +9,7 @@ export default {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        "2xl": "1200px",
       },
     },
     extend: {
@@ -38,6 +38,7 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          hover: "hsl(var(--accent-hover))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -55,6 +56,7 @@ export default {
       },
       backgroundImage: {
         'gradient-subtle': 'var(--gradient-subtle)',
+        'gradient-hero': 'var(--gradient-hero)',
       },
       boxShadow: {
         'soft': 'var(--shadow-soft)',
@@ -84,6 +86,7 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "gradient-shift": "gradient-shift 15s ease infinite",
       },
     },
   },

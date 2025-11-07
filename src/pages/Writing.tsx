@@ -9,10 +9,10 @@ const Writing = () => {
       <Header />
       
       <main className="flex-1 pt-24">
-        <div className="container mx-auto px-6 py-16">
+        <div className="container mx-auto px-6 py-16 md:py-24">
           <div className="max-w-5xl mx-auto">
             <div className="mb-16 animate-fade-in">
-              <h1 className="text-5xl md:text-6xl font-bold mb-6">Writing</h1>
+              <h1 className="text-5xl md:text-6xl font-semibold mb-6">Writing</h1>
               <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
                 Thoughts on software engineering, clean architecture, personal growth, 
                 and lessons learned building meaningful technology.
