@@ -1,6 +1,29 @@
-import { Button } from "./ui/button";
+import PortfolioCard from "./PortfolioCard";
 
 const Portfolio = () => {
+  const placeholderProjects = [
+    {
+      title: "Project One",
+      description: "A placeholder for your first featured project. Replace this with a real project description highlighting the problem solved and impact made.",
+      techStack: ["React", "TypeScript", "Node.js"],
+      githubUrl: "#",
+      liveUrl: "#"
+    },
+    {
+      title: "Project Two",
+      description: "A placeholder for your second featured project. Describe the technical challenges, your approach, and the results achieved.",
+      techStack: ["C#", ".NET", "Azure"],
+      githubUrl: "#"
+    },
+    {
+      title: "Project Three",
+      description: "A placeholder for your third featured project. Share what you learned and how this project demonstrates your expertise.",
+      techStack: ["Next.js", "PostgreSQL", "AWS"],
+      githubUrl: "#",
+      liveUrl: "#"
+    }
+  ];
+
   return (
     <section id="portfolio" className="py-24 md:py-24 py-16 bg-background">
       <div className="container mx-auto px-6">
@@ -11,18 +34,10 @@ const Portfolio = () => {
             clean architecture, and building scalable systems that solve real problems.
           </p>
           
-          <div className="text-center py-16 space-y-8">
-            <p className="text-muted-foreground text-lg italic">
-              I'm curating the best work to showcase here soon.
-            </p>
-            <Button 
-              asChild
-              variant="outline"
-              size="lg"
-              className="border-accent text-accent hover:bg-accent hover:text-accent-foreground transition-all duration-300"
-            >
-              <a href="#contact">Contact me for examples</a>
-            </Button>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {placeholderProjects.map((project, index) => (
+              <PortfolioCard key={index} {...project} />
+            ))}
           </div>
         </div>
       </div>
