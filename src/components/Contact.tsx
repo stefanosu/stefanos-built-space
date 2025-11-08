@@ -46,7 +46,7 @@ const Contact = () => {
                   </a>
                   
                   <a 
-                    href="https://linkedin.com/in/stefanos-ugbit"
+                    href="https://www.linkedin.com/in/stefanosugbit/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-all duration-300 group"
@@ -58,7 +58,7 @@ const Contact = () => {
                   </a>
                   
                   <a 
-                    href="https://github.com/stefanos-ugbit"
+                    href="https://github.com/stefanosu"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-all duration-300 group"
