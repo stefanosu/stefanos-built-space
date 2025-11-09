@@ -4,6 +4,8 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
+import { Turnstile } from "@marsidev/react-turnstile";
+
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -11,13 +13,40 @@ const Contact = () => {
     email: "",
     message: ""
   });
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Placeholder for form submission
-    toast.success("Message sent! I'll get back to you soon.");
-    setFormData({ name: "", email: "", message: "" });
+  
+    if (!turnstileToken) {
+      toast.error("Please verify you're human.");
+      return;
+    }
+  
+    try {
+      const res = await fetch("https://contact-resend.stefanosugbit.workers.dev", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          turnstileToken,
+        }),
+      });
+  
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Something went wrong");
+  
+      toast.success("Message sent! I'll get back to you soon.");
+  
+      // Reset form
+      setFormData({ name: "", email: "", message: "" });
+      setTurnstileToken(null);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to send message. Try again later.";
+      toast.error(message);
+    }
   };
+  
 
   return (
     <section id="contact" className="py-24 md:py-24 py-16 bg-gradient-subtle">
@@ -105,6 +134,14 @@ const Contact = () => {
                     className="bg-card border-border resize-none focus:border-accent transition-colors duration-300"
                   />
                 </div>
+
+            <Turnstile
+              siteKey="YOUR_REAL_SITE_KEY"
+              className="rounded-md"
+              onSuccess={(token) => setTurnstileToken(token)}
+              onExpire={() => setTurnstileToken(null)}
+              onError={() => setTurnstileToken(null)}
+            />
                 
                 <Button 
                   type="submit"
