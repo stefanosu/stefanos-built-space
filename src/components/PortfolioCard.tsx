@@ -10,19 +10,23 @@ interface PortfolioCardProps {
   imageUrl?: string;
 }
 
-const PortfolioCard = ({ 
-  title, 
-  description, 
-  techStack, 
-  githubUrl, 
+const PortfolioCard = ({
+  title,
+  description,
+  techStack,
+  githubUrl,
   liveUrl,
-  imageUrl 
+  imageUrl,
 }: PortfolioCardProps) => {
   return (
     <article className="bg-card rounded-xl overflow-hidden shadow-soft border border-border/50 hover:shadow-medium transition-all duration-300 group">
       <div className="aspect-video bg-secondary flex items-center justify-center relative overflow-hidden">
         {imageUrl ? (
-          <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+          <img
+            src={imageUrl}
+            alt={title}
+            className="w-full h-full object-cover"
+          />
         ) : (
           <div className="text-6xl font-bold text-muted-foreground/20">
             {title.charAt(0)}
@@ -30,19 +34,17 @@ const PortfolioCard = ({
         )}
         <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/10 transition-colors duration-300"></div>
       </div>
-      
+
       <div className="p-6 space-y-4">
         <h3 className="text-2xl font-semibold group-hover:text-accent transition-colors">
           {title}
         </h3>
-        
-        <p className="text-muted-foreground leading-relaxed">
-          {description}
-        </p>
-        
+
+        <p className="text-muted-foreground leading-relaxed">{description}</p>
+
         <div className="flex flex-wrap gap-2">
           {techStack.map((tech, index) => (
-            <span 
+            <span
               key={index}
               className="px-3 py-1 bg-secondary text-sm rounded-full text-foreground/80"
             >
@@ -50,12 +52,12 @@ const PortfolioCard = ({
             </span>
           ))}
         </div>
-        
+
         <div className="flex gap-3 pt-2">
           {githubUrl && (
-            <Button 
+            <Button
               asChild
-              variant="outline" 
+              variant="outline"
               size="sm"
               className="border-border hover:bg-secondary"
             >
@@ -66,7 +68,7 @@ const PortfolioCard = ({
             </Button>
           )}
           {liveUrl && (
-            <Button 
+            <Button
               asChild
               size="sm"
               className="bg-accent hover:bg-accent/90 text-accent-foreground"

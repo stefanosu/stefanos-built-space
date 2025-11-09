@@ -61,8 +61,10 @@ All colors MUST be HSL.
     html {
       scroll-behavior: auto;
     }
-    
-    *, *::before, *::after {
+
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
@@ -71,12 +73,17 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', 'Manrope', sans-serif;
+    font-family: "Inter", "Manrope", sans-serif;
     font-weight: 300;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'General Sans', 'Inter', sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "General Sans", "Inter", sans-serif;
     font-weight: 500;
     letter-spacing: -0.02em;
   }
@@ -90,11 +97,11 @@ All colors MUST be HSL.
   .text-balance {
     text-wrap: balance;
   }
-  
+
   .animate-fade-in {
     animation: fade-in 0.8s ease-out;
   }
-  
+
   .animate-slide-up {
     animation: slide-up 0.7s ease-out;
   }
@@ -108,7 +115,7 @@ All colors MUST be HSL.
     animation-delay: 0.35s;
     animation-fill-mode: both;
   }
-  
+
   .nav-underline {
     @apply relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-accent after:origin-bottom-right after:transition-transform after:duration-200 hover:after:scale-x-100 hover:after:origin-bottom-left;
   }
@@ -139,7 +146,8 @@ All colors MUST be HSL.
 }
 
 @keyframes gradient-shift {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {

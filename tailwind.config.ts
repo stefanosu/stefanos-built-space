@@ -2,7 +2,12 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -55,15 +60,15 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       backgroundImage: {
-        'gradient-subtle': 'var(--gradient-subtle)',
-        'gradient-hero': 'var(--gradient-hero)',
+        "gradient-subtle": "var(--gradient-subtle)",
+        "gradient-hero": "var(--gradient-hero)",
       },
       boxShadow: {
-        'soft': 'var(--shadow-soft)',
-        'medium': 'var(--shadow-medium)',
+        soft: "var(--shadow-soft)",
+        medium: "var(--shadow-medium)",
       },
       transitionProperty: {
-        'smooth': 'var(--transition-smooth)',
+        smooth: "var(--transition-smooth)",
       },
       keyframes: {
         "accordion-down": {

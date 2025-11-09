@@ -12,7 +12,8 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "clean-architecture-principles",
     title: "Clean Architecture Principles in Modern Web Development",
-    excerpt: "Exploring how clean architecture principles can help us build more maintainable, testable, and scalable applications. This post covers separation of concerns, dependency inversion, and practical implementation strategies.",
+    excerpt:
+      "Exploring how clean architecture principles can help us build more maintainable, testable, and scalable applications. This post covers separation of concerns, dependency inversion, and practical implementation strategies.",
     content: `
 # Clean Architecture Principles in Modern Web Development
 
@@ -70,12 +71,13 @@ Clean architecture requires upfront investment, but pays dividends in the long r
     `,
     date: "2024-01-15",
     readTime: "8 min read",
-    tags: ["Architecture", "Software Design", "Best Practices"]
+    tags: ["Architecture", "Software Design", "Best Practices"],
   },
   {
     slug: "typescript-advanced-patterns",
     title: "Advanced TypeScript Patterns for Robust Applications",
-    excerpt: "Dive deep into advanced TypeScript patterns including discriminated unions, conditional types, and mapped types. Learn how to leverage TypeScript's type system to catch bugs at compile time.",
+    excerpt:
+      "Dive deep into advanced TypeScript patterns including discriminated unions, conditional types, and mapped types. Learn how to leverage TypeScript's type system to catch bugs at compile time.",
     content: `
 # Advanced TypeScript Patterns for Robust Applications
 
@@ -146,12 +148,13 @@ These patterns help catch errors at compile time, improve IDE support, and make 
     `,
     date: "2024-02-20",
     readTime: "10 min read",
-    tags: ["TypeScript", "Programming", "Web Development"]
+    tags: ["TypeScript", "Programming", "Web Development"],
   },
   {
     slug: "mentorship-in-tech",
     title: "The Power of Mentorship in Software Engineering",
-    excerpt: "Reflections on giving and receiving mentorship in the tech industry. How mentorship accelerates growth, builds community, and creates lasting impact beyond code.",
+    excerpt:
+      "Reflections on giving and receiving mentorship in the tech industry. How mentorship accelerates growth, builds community, and creates lasting impact beyond code.",
     content: `
 # The Power of Mentorship in Software Engineering
 
@@ -218,6 +221,6 @@ Mentorship is one of the highest-leverage activities we can engage in as softwar
     `,
     date: "2024-03-10",
     readTime: "6 min read",
-    tags: ["Career", "Mentorship", "Community"]
-  }
+    tags: ["Career", "Mentorship", "Community"],
+  },
 ];
