@@ -148,7 +148,7 @@ const Contact = () => {
                 </div>
 
                 <Turnstile
-                  siteKey="YOUR_REAL_SITE_KEY"
+                  siteKey="0x4AAAAAAB_4IMIEKwr9pvEt"
                   className="rounded-md"
                   onSuccess={(token) => setTurnstileToken(token)}
                   onExpire={() => setTurnstileToken(null)}

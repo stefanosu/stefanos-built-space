@@ -83,8 +83,9 @@ export default {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				from: 'Portfolio Contact <onboarding@resend.dev>',
+				from: 'Stefanos Portfolio <hello@stefanosugbit.com>',
 				to: 'stefanos.ugbit@gmail.com',
+				reply_to: email,
 				subject: `Message from ${name}`,
 				html: `
 			<p><strong>Name:</strong> ${name}</p>

@@ -35,6 +35,18 @@
       name="twitter:title"
       content="Stefanos Ugbit • Software Engineer & Builder"
     />
+    <script>
+      (function () {
+        const storedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = storedTheme ?? (prefersDark ? "dark" : "light");
+        if (theme === "dark") {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
   </head>
 
   <body>

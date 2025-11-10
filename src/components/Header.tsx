@@ -1,7 +1,36 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 import { NavLink } from "./NavLink";
 
 const Header = () => {
+  const getCurrentTheme = (): "light" | "dark" => {
+    if (typeof window === "undefined") {
+      return "light";
+    }
+    return document.documentElement.classList.contains("dark") ? "dark" : "light";
+  };
+
+  const [theme, setTheme] = useState<"light" | "dark">(getCurrentTheme);
+
+  useEffect(() => {
+    setTheme(getCurrentTheme());
+  }, []);
+
+  const toggleTheme = () => {
+    const el = document.documentElement;
+    const next = theme === "dark" ? "light" : "dark";
+
+    if (next === "dark") {
+      el.classList.add("dark");
+    } else {
+      el.classList.remove("dark");
+    }
+
+    localStorage.setItem("theme", next);
+    setTheme(next);
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur-md">
       <nav className="container mx-auto px-6 py-5">
@@ -35,15 +64,16 @@ const Header = () => {
               Contact
             </a>
             <button
-              onClick={() => {
-                const el = document.documentElement;
-                const next = el.classList.toggle("dark") ? "dark" : "light";
-                localStorage.setItem("theme", next);
-              }}
-              className="p-2 rounded-md border border-border hover:bg-accent/10 transition"
+              onClick={toggleTheme}
+              className="p-2 rounded-md border border-border hover:bg-accent/10 transition flex items-center justify-center"
               aria-label="Toggle theme"
             >
-              🌓
+              <span className="sr-only">Toggle theme</span>
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
             </button>
           </div>
         </div>

@@ -8,6 +8,48 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    color-scheme: light;
+    --background: 0 0% 100%;
+    --foreground: 224 71% 4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+
+    --primary: 38 40% 62%;
+    --primary-foreground: 0 0% 5%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 224 71% 4%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 19% 35%;
+
+    --accent: 38 40% 62%;
+    --accent-foreground: 0 0% 5%;
+    --accent-hover: 38 48% 72%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 38 40% 62%;
+
+    --radius: 0.75rem;
+
+    /* Custom design tokens */
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 100%), hsl(40 20% 92%));
+    --gradient-subtle: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 40% 96%));
+    --shadow-soft: 0 4px 24px -4px hsl(0 0% 0% / 0.12);
+    --shadow-medium: 0 8px 32px -8px hsl(0 0% 0% / 0.16);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    color-scheme: dark;
     --background: 0 0% 5%;
     --foreground: 40 20% 92%;
 
@@ -23,7 +65,7 @@ All colors MUST be HSL.
     --secondary: 0 0% 10%;
     --secondary-foreground: 40 20% 92%;
 
-    --muted: 0 0% 10%;
+    --muted: 0 0% 12%;
     --muted-foreground: 0 0% 65%;
 
     --accent: 38 40% 62%;
@@ -39,7 +81,6 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
-    /* Custom design tokens */
     --gradient-hero: linear-gradient(135deg, hsl(0 0% 5%), hsl(230 30% 8%));
     --gradient-subtle: linear-gradient(135deg, hsl(0 0% 7%), hsl(0 0% 5%));
     --shadow-soft: 0 4px 24px -4px hsl(0 0% 0% / 0.3);
