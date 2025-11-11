@@ -24,7 +24,7 @@ const Contact = () => {
 
     try {
       const res = await fetch(
-        "https://contact-resend.stefanosugbit.workers.dev",
+        "https://contact-mailer.stefanos-ugbit.workers.dev", 
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
