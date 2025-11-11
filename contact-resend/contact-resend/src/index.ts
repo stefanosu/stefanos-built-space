@@ -1,3 +1,21 @@
+// --- CORS helpers ------------------------------------------------------------
+const ALLOWED_ORIGINS = [
+	"https://stefanosugbit.com",
+	"https://www.stefanosugbit.com",
+	"http://localhost:5173", // dev, remove later
+];
+
+const corsHeaders = (origin: string | null) => {
+	const allow = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+	return {
+		"Access-Control-Allow-Origin": allow,
+		Vary: "Origin",
+		"Access-Control-Allow-Methods": "POST,OPTIONS",
+		"Access-Control-Allow-Headers": "content-type",
+		"Access-Control-Max-Age": "86400",
+	};
+};
+// -----------------------------------------------------------------------------
 type ContactRequest = {
 	name: string;
 	email: string;
@@ -39,21 +57,43 @@ const isTurnstileVerification = (value: unknown): value is TurnstileVerification
 	return typeof record.success === 'boolean';
 };
 
+const withCors = (origin: string | null, response: ResponseInit & { body?: BodyInit | null } | Response) => {
+	if (response instanceof Response) {
+		const headers = new Headers(response.headers);
+		Object.entries(corsHeaders(origin)).forEach(([key, value]) => headers.set(key, value));
+		return new Response(response.body, { ...response, headers });
+	}
+
+	return {
+		...response,
+		headers: {
+			...(response.headers ?? {}),
+			...corsHeaders(origin),
+		},
+	};
+};
+
 export default {
 	async fetch(request: Request, env: WorkerEnv): Promise<Response> {
+		const origin = request.headers.get('Origin');
+
+		if (request.method === 'OPTIONS') {
+			return new Response(null, { headers: corsHeaders(origin) });
+		}
+
 		if (request.method !== 'POST') {
-			return new Response('Only POST allowed', { status: 405 });
+			return new Response('Only POST allowed', withCors(origin, { status: 405 }));
 		}
 
 		let data: unknown;
 		try {
 			data = await request.json();
 		} catch {
-			return new Response('Invalid JSON', { status: 400 });
+			return new Response('Invalid JSON', withCors(origin, { status: 400 }));
 		}
 
 		if (!isContactRequest(data)) {
-			return new Response('Missing fields', { status: 400 });
+			return new Response('Missing fields', withCors(origin, { status: 400 }));
 		}
 
 		const { name, email, message, turnstileToken } = data;
@@ -69,10 +109,13 @@ export default {
 
 		const verificationData = await verifyResponse.json();
 		if (!isTurnstileVerification(verificationData) || !verificationData.success) {
-			return new Response(JSON.stringify({ error: 'Captcha failed' }), {
-				status: 400,
-				headers: { 'Content-Type': 'application/json' },
-			});
+			return new Response(
+				JSON.stringify({ error: 'Captcha failed' }),
+				withCors(origin, {
+					status: 400,
+					headers: { 'Content-Type': 'application/json' },
+				}),
+			);
 		}
 
 		// ✅ Send Email With Resend
@@ -98,15 +141,21 @@ export default {
 
 		if (!emailRes.ok) {
 			const err = await emailRes.text();
-			return new Response(JSON.stringify({ error: err }), {
-				status: 500,
-				headers: { 'Content-Type': 'application/json' },
-			});
+			return new Response(
+				JSON.stringify({ error: err }),
+				withCors(origin, {
+					status: 500,
+					headers: { 'Content-Type': 'application/json' },
+				}),
+			);
 		}
 
-		return new Response(JSON.stringify({ success: true }), {
-			status: 200,
-			headers: { 'Content-Type': 'application/json' },
-		});
+		return new Response(
+			JSON.stringify({ success: true }),
+			withCors(origin, {
+				status: 200,
+				headers: { 'Content-Type': 'application/json' },
+			}),
+		);
 	},
 };
