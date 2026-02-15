@@ -15,8 +15,6 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Exploring a common architectural dilemma in Clean Architecture: should complex business logic live in controllers or a dedicated service layer? A practical look at the trade-offs while building a personal finance tracker.",
     content: `
-# Controllers or Services: Where Should Orchestration Live?
-
 ## Where Should Complex Business Logic Live in Clean Architecture?
 
 While building my personal finance tracker, I faced a common architectural dilemma: where should complex business logic live in Clean Architecture?
@@ -65,8 +63,6 @@ Curious how others approach this — especially if you've built solo or in small
     excerpt:
       "Part 2 of my personal finance tracker series. Moving to service layer orchestration doesn't just change your code structure—it fundamentally changes your entire testing strategy. Here's what I learned.",
     content: `
-# Testing Your Architecture Decisions: How Service Layer Orchestration Changes Your Testing Strategy
-
 *Part 2 of my personal finance tracker development series*
 
 In my previous post, I decided to move complex business logic from controllers into a dedicated service layer. The ExpenseService now handles the orchestration of validating users, checking accounts, verifying categories, and creating transactions.
@@ -347,8 +343,6 @@ Building in public as a solo developer has its challenges, but the testing clari
     excerpt:
       "Part 3 of my personal finance tracker series. Unit tests give you confidence in your logic, but integration tests give you confidence in your system. Here are the patterns I developed after too many 'but it works in the tests!' incidents.",
     content: `
-# Integration Testing Patterns That Actually Work
-
 *Part 3 of my personal finance tracker development series*
 
 In my last post, I shared how moving to a service layer architecture transformed my testing strategy. The unit tests were clean, the mocks were... well, everywhere, and I felt pretty good about my 70% unit test coverage.
