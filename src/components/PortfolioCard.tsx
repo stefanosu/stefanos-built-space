@@ -25,7 +25,7 @@ const PortfolioCard = ({
           <img
             src={imageUrl}
             alt={title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain bg-[#0f1729]"
           />
         ) : (
           <div className="text-6xl font-bold text-muted-foreground/20">

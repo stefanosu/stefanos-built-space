@@ -3,52 +3,15 @@ import Footer from "@/components/Footer";
 import PortfolioCard from "@/components/PortfolioCard";
 
 const PortfolioPage = () => {
-  // Placeholder projects - ready to be filled
   const projects = [
     {
-      title: "Enterprise SaaS Platform",
+      title: "FinanceTracker",
       description:
-        "Placeholder for a large-scale SaaS application. Describe the architecture, scaling challenges, and how you solved complex distributed system problems.",
-      techStack: ["React", "TypeScript", "Node.js", "PostgreSQL", "AWS"],
-      githubUrl: "#",
-      liveUrl: "#",
-    },
-    {
-      title: "Real-time Collaboration Tool",
-      description:
-        "Placeholder for a real-time application. Explain WebSocket implementation, state synchronization, and performance optimization strategies.",
-      techStack: ["Next.js", "Socket.io", "Redis", "Docker"],
-      githubUrl: "#",
-    },
-    {
-      title: "E-commerce Platform",
-      description:
-        "Placeholder for an e-commerce solution. Detail payment integration, inventory management, and user experience enhancements.",
-      techStack: ["C#", ".NET Core", "Azure", "SQL Server"],
-      githubUrl: "#",
-      liveUrl: "#",
-    },
-    {
-      title: "Developer Tools CLI",
-      description:
-        "Placeholder for a command-line tool. Share the problem it solves, adoption metrics, and how you designed the developer experience.",
-      techStack: ["Node.js", "TypeScript", "Commander.js"],
-      githubUrl: "#",
-    },
-    {
-      title: "Mobile-First Web App",
-      description:
-        "Placeholder for a mobile-focused application. Discuss responsive design decisions, performance optimization, and PWA features.",
-      techStack: ["React", "Tailwind CSS", "Service Workers"],
-      githubUrl: "#",
-      liveUrl: "#",
-    },
-    {
-      title: "API Gateway Service",
-      description:
-        "Placeholder for a backend service. Explain microservices architecture, API design patterns, and monitoring solutions implemented.",
-      techStack: ["C#", ".NET", "Docker", "Kubernetes", "Azure"],
-      githubUrl: "#",
+        "A full-stack personal finance management system with expense tracking, multi-account management, analytics dashboards, and an AI-powered budget assistant using Claude for personalized financial guidance.",
+      techStack: [".NET 8", "Next.js", "TypeScript", "PostgreSQL", "Claude API"],
+      githubUrl: "https://github.com/stefanosu/FinanceTrackerApp",
+      liveUrl: "https://finance-tracker-app-ivory.vercel.app",
+      imageUrl: "/financetracker-analytics.png",
     },
   ];
 

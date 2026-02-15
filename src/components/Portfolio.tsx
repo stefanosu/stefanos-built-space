@@ -1,34 +1,20 @@
 import PortfolioCard from "./PortfolioCard";
 
 const Portfolio = () => {
-  const placeholderProjects = [
+  const projects = [
     {
-      title: "Project One",
+      title: "FinanceTracker",
       description:
-        "A placeholder for your first featured project. Replace this with a real project description highlighting the problem solved and impact made.",
-      techStack: ["React", "TypeScript", "Node.js"],
-      githubUrl: "#",
-      liveUrl: "#",
-    },
-    {
-      title: "Project Two",
-      description:
-        "A placeholder for your second featured project. Describe the technical challenges, your approach, and the results achieved.",
-      techStack: ["C#", ".NET", "Azure"],
-      githubUrl: "#",
-    },
-    {
-      title: "Project Three",
-      description:
-        "A placeholder for your third featured project. Share what you learned and how this project demonstrates your expertise.",
-      techStack: ["Next.js", "PostgreSQL", "AWS"],
-      githubUrl: "#",
-      liveUrl: "#",
+        "A full-stack personal finance management system with expense tracking, multi-account management, analytics dashboards, and an AI-powered budget assistant using Claude for personalized financial guidance.",
+      techStack: [".NET 8", "Next.js", "TypeScript", "PostgreSQL", "Claude API"],
+      githubUrl: "https://github.com/stefanosu/FinanceTrackerApp",
+      liveUrl: "https://finance-tracker-app-ivory.vercel.app",
+      imageUrl: "/financetracker-analytics.png",
     },
   ];
 
   return (
-    <section id="portfolio" className="py-24 md:py-24 py-16 bg-background">
+    <section id="portfolio" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-semibold mb-12 text-center animate-fade-in">
@@ -41,7 +27,7 @@ const Portfolio = () => {
           </p>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {placeholderProjects.map((project, index) => (
+            {projects.map((project, index) => (
               <PortfolioCard key={index} {...project} />
             ))}
           </div>
