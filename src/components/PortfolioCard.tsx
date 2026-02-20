@@ -19,7 +19,7 @@ const PortfolioCard = ({
   imageUrl,
 }: PortfolioCardProps) => {
   return (
-    <article className="bg-card rounded-xl overflow-hidden shadow-soft border border-border/50 hover:shadow-medium transition-all duration-300 group">
+    <article className="bg-card rounded-xl overflow-hidden shadow-soft border border-border/50 hover:shadow-medium hover:-translate-y-2 transition-all duration-300 group">
       <div className="aspect-video bg-secondary flex items-center justify-center relative overflow-hidden">
         {imageUrl ? (
           <img
@@ -32,7 +32,10 @@ const PortfolioCard = ({
             {title.charAt(0)}
           </div>
         )}
-        <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/10 transition-colors duration-300"></div>
+        <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/10 transition-all duration-300"></div>
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-t from-accent/20 to-transparent"></div>
+        </div>
       </div>
 
       <div className="p-6 space-y-4">
@@ -46,7 +49,7 @@ const PortfolioCard = ({
           {techStack.map((tech, index) => (
             <span
               key={index}
-              className="px-3 py-1 bg-secondary text-sm rounded-full text-foreground/80"
+              className="px-3 py-1 bg-secondary text-sm rounded-full text-foreground/80 transition-all duration-200 hover:bg-accent/20 hover:scale-105"
             >
               {tech}
             </span>

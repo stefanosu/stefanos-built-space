@@ -19,7 +19,7 @@ const BlogPostCard = ({
   tags,
 }: BlogPostCardProps) => {
   return (
-    <article className="bg-card rounded-xl p-8 shadow-soft border border-border/50 hover:shadow-medium transition-all duration-300 group">
+    <article className="bg-card rounded-xl p-8 shadow-soft border border-border/50 hover:shadow-medium hover:-translate-y-2 hover:border-accent/30 transition-all duration-300 group">
       <Link to={`/writing/${slug}`}>
         <div className="space-y-4">
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -46,7 +46,7 @@ const BlogPostCard = ({
               {tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-secondary text-sm rounded-full text-foreground/80"
+                  className="px-3 py-1 bg-secondary text-sm rounded-full text-foreground/80 transition-all duration-200 hover:bg-accent/20 hover:scale-105"
                 >
                   {tag}
                 </span>

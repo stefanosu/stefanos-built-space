@@ -1,4 +1,5 @@
 import PortfolioCard from "./PortfolioCard";
+import { AnimatedSection } from "./AnimatedSection";
 
 const Portfolio = () => {
   const projects = [
@@ -28,7 +29,9 @@ const Portfolio = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, index) => (
-              <PortfolioCard key={index} {...project} />
+              <AnimatedSection key={index} delay={index * 100}>
+                <PortfolioCard {...project} />
+              </AnimatedSection>
             ))}
           </div>
         </div>
