@@ -46,7 +46,15 @@ const Hero = () => {
             <h1
               className={`text-5xl md:text-7xl font-semibold tracking-tight text-balance leading-tight cursor-pointer select-none transition-all duration-300 ${getNameStyle()} ${isWiggling ? "animate-wiggle" : ""}`}
               onClick={handleNameClick}
-              title={clickCount >= 3 ? "Keep clicking..." : undefined}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleNameClick();
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-label="Click for a surprise"
             >
               {displayedText}
               {!isComplete && <span className="animate-pulse">|</span>}

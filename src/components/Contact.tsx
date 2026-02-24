@@ -73,6 +73,7 @@ const Contact = () => {
                   <a
                     href="mailto:stefanos.ugbit@gmail.com"
                     className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-all duration-300 group"
+                    aria-label="Send email to stefanos.ugbit@gmail.com"
                   >
                     <div className="w-10 h-10 rounded-full bg-card flex items-center justify-center group-hover:bg-accent/20 transition-all duration-300">
                       <Mail className="w-5 h-5" />
@@ -85,6 +86,7 @@ const Contact = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-all duration-300 group"
+                    aria-label="Visit LinkedIn profile (opens in new tab)"
                   >
                     <div className="w-10 h-10 rounded-full bg-card flex items-center justify-center group-hover:bg-accent/20 transition-all duration-300">
                       <Linkedin className="w-5 h-5" />
@@ -97,6 +99,7 @@ const Contact = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-all duration-300 group"
+                    aria-label="Visit GitHub profile (opens in new tab)"
                   >
                     <div className="w-10 h-10 rounded-full bg-card flex items-center justify-center group-hover:bg-accent/20 transition-all duration-300">
                       <Github className="w-5 h-5" />
@@ -108,6 +111,7 @@ const Contact = () => {
                     href="/resume.pdf"
                     download
                     className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-all duration-300 group"
+                    aria-label="Download resume as PDF"
                   >
                     <div className="w-10 h-10 rounded-full bg-card flex items-center justify-center group-hover:bg-accent/20 transition-all duration-300">
                       <FileDown className="w-5 h-5" />
@@ -121,19 +125,28 @@ const Contact = () => {
             <div>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
+                  <label htmlFor="name" className="sr-only">
+                    Your Name
+                  </label>
                   <Input
+                    id="name"
                     placeholder="Your Name"
                     value={formData.name}
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
                     required
+                    aria-required="true"
                     className="bg-card border-border focus:border-accent transition-colors duration-300"
                   />
                 </div>
 
                 <div>
+                  <label htmlFor="email" className="sr-only">
+                    Your Email
+                  </label>
                   <Input
+                    id="email"
                     type="email"
                     placeholder="Your Email"
                     value={formData.email}
@@ -141,18 +154,24 @@ const Contact = () => {
                       setFormData({ ...formData, email: e.target.value })
                     }
                     required
+                    aria-required="true"
                     className="bg-card border-border focus:border-accent transition-colors duration-300"
                   />
                 </div>
 
                 <div>
+                  <label htmlFor="message" className="sr-only">
+                    Your Message
+                  </label>
                   <Textarea
+                    id="message"
                     placeholder="Your Message"
                     value={formData.message}
                     onChange={(e) =>
                       setFormData({ ...formData, message: e.target.value })
                     }
                     required
+                    aria-required="true"
                     rows={6}
                     className="bg-card border-border resize-none focus:border-accent transition-colors duration-300"
                   />

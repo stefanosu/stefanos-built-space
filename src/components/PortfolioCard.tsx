@@ -24,7 +24,7 @@ const PortfolioCard = ({
         {imageUrl ? (
           <img
             src={imageUrl}
-            alt={title}
+            alt={`Screenshot of ${title} project`}
             className="w-full h-full object-contain bg-[#0f1729]"
           />
         ) : (
@@ -64,8 +64,13 @@ const PortfolioCard = ({
               size="sm"
               className="border-border hover:bg-secondary"
             >
-              <a href={githubUrl} target="_blank" rel="noopener noreferrer">
-                <Github className="w-4 h-4 mr-2" />
+              <a
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`View ${title} source code on GitHub (opens in new tab)`}
+              >
+                <Github className="w-4 h-4 mr-2" aria-hidden="true" />
                 Code
               </a>
             </Button>
@@ -76,8 +81,13 @@ const PortfolioCard = ({
               size="sm"
               className="bg-accent hover:bg-accent/90 text-accent-foreground"
             >
-              <a href={liveUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="w-4 h-4 mr-2" />
+              <a
+                href={liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`View ${title} live demo (opens in new tab)`}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" aria-hidden="true" />
                 Live Demo
               </a>
             </Button>
