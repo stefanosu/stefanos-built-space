@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Linkedin, Github, Send } from "lucide-react";
+import { Mail, Linkedin, Github, Send, FileDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
@@ -102,6 +102,17 @@ const Contact = () => {
                       <Github className="w-5 h-5" />
                     </div>
                     <span>GitHub</span>
+                  </a>
+
+                  <a
+                    href="/resume.pdf"
+                    download
+                    className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-all duration-300 group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-card flex items-center justify-center group-hover:bg-accent/20 transition-all duration-300">
+                      <FileDown className="w-5 h-5" />
+                    </div>
+                    <span>Download Resume</span>
                   </a>
                 </div>
               </div>

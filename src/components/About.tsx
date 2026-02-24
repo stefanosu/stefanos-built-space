@@ -19,7 +19,7 @@ const About = () => {
       icon: Heart,
       title: "Beyond Code",
       description:
-        "Boxing, fitness, poetry, personal growth, and travel. Mentorship in tech and giving back to the community.",
+        "Published author and poet. Boxing, fitness, personal growth, and travel. Mentorship in tech and giving back to the community.",
     },
   ];
 
@@ -66,9 +66,10 @@ const About = () => {
                 </p>
 
                 <p className="text-lg leading-relaxed">
-                  Outside of engineering, I'm committed to personal development. I
-                  box, train, read, and write — and I try to approach my work and
-                  life with presence, patience, and discipline.
+                  Outside of engineering, I'm committed to personal development and
+                  creative expression. I'm a published author and poet, and I also
+                  box, train, and read. I try to approach my work and life with
+                  presence, patience, and discipline.
                 </p>
               </div>
             </div>

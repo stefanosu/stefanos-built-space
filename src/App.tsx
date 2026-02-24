@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Writing from "./pages/Writing";
 import BlogPost from "./pages/BlogPost";
 import PortfolioPage from "./pages/PortfolioPage";
+import PublicationsPage from "./pages/PublicationsPage";
 import NotFound from "./pages/NotFound";
 import { EasterEgg } from "./components/EasterEgg";
 import { PageTransition } from "./components/PageTransition";
@@ -23,6 +24,7 @@ function AppRoutes() {
         <Route path="/writing" element={<Writing />} />
         <Route path="/writing/:slug" element={<BlogPost />} />
         <Route path="/portfolio" element={<PortfolioPage />} />
+        <Route path="/publications" element={<PublicationsPage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

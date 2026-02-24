@@ -57,6 +57,13 @@ const Header = () => {
             >
               Writing
             </NavLink>
+            <NavLink
+              to="/publications"
+              className="text-muted-foreground hover:text-foreground transition-all duration-300 nav-underline pb-1"
+              activeClassName="text-foreground nav-underline-active"
+            >
+              Publications
+            </NavLink>
             <a
               href="#contact"
               className="text-muted-foreground hover:text-foreground transition-all duration-300 nav-underline pb-1"
