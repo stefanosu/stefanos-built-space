@@ -27,6 +27,8 @@ jobs:
 
       - run: npm ci
       - run: npm run build # this runs `vite build` (ensure your package.json has it)
+        env:
+          VITE_ADMIN_PASSWORD_HASH: ${{ secrets.VITE_ADMIN_PASSWORD_HASH }}
 
       # Prevent Jekyll from munging files
       - run: touch dist/.nojekyll

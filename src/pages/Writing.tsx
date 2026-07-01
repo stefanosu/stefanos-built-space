@@ -1,6 +1,9 @@
+import { Link } from "react-router-dom";
+import { PenLine } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import BlogPostCard from "@/components/BlogPostCard";
+import BlogStack from "@/components/BlogStack";
+import { Button } from "@/components/ui/button";
 import { blogPosts } from "@/data/blogPosts";
 
 const Writing = () => {
@@ -12,27 +15,26 @@ const Writing = () => {
         <div className="container mx-auto px-6 py-16 md:py-24">
           <div className="max-w-5xl mx-auto">
             <div className="mb-16 animate-fade-in">
-              <h1 className="text-5xl md:text-6xl font-semibold mb-6">
-                Writing
-              </h1>
+              <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
+                <h1 className="text-5xl md:text-6xl font-semibold">Writing</h1>
+                <Button asChild variant="outline" size="sm" className="mt-2">
+                  <Link to="/writing/admin">
+                    <PenLine className="w-4 h-4" />
+                    New Post
+                  </Link>
+                </Button>
+              </div>
               <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
                 Thoughts on software engineering, clean architecture, personal
                 growth, and lessons learned building meaningful technology.
               </p>
+              <p className="hidden md:block text-sm text-muted-foreground/70 mt-4 italic">
+                Hover over a post to preview it.
+              </p>
             </div>
 
-            <div className="space-y-8 animate-slide-up">
-              {blogPosts.map((post) => (
-                <BlogPostCard
-                  key={post.slug}
-                  slug={post.slug}
-                  title={post.title}
-                  excerpt={post.excerpt}
-                  date={post.date}
-                  readTime={post.readTime}
-                  tags={post.tags}
-                />
-              ))}
+            <div className="animate-slide-up">
+              <BlogStack posts={blogPosts} />
             </div>
           </div>
         </div>

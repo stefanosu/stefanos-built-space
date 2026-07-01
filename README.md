@@ -60,6 +60,33 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Writing posts from the site (`/writing/admin`)
+
+There's a hidden editor at `/writing/admin` (not linked from navigation) that lets
+you write and publish blog posts directly from the browser. Publishing commits a
+new file under `src/data/posts/` straight to GitHub via the Contents API, which
+triggers the normal GitHub Pages deploy.
+
+To use it, you need two things configured — neither of which is required for the
+site to build or run otherwise:
+
+1. **Admin password** — the page is gated by a password whose SHA-256 hash is
+   baked in at build time via `VITE_ADMIN_PASSWORD_HASH`.
+   - Locally: copy `.env.local.example` to `.env.local` and fill in a hash (see
+     the instructions in that file for generating one).
+   - In production: add `VITE_ADMIN_PASSWORD_HASH` as a GitHub Actions repo secret
+     (Settings → Secrets and variables → Actions) so it's available to the build
+     step in `.github/workflows/deploy-pages.yml` / `pages.yml`.
+2. **GitHub token** — once past the password screen, the editor asks for a GitHub
+   personal access token used to commit posts. Use a fine-grained token scoped
+   only to this repo's "Contents: Read and write" permission; it's stored only in
+   your browser (localStorage, if you opt in) and sent only to GitHub's API.
+
+This is a soft gate, not a security boundary — since this is a static site, the
+password hash and the admin route both live in the shipped JS bundle. Treat the
+GitHub token as the real credential, and revoke/rotate it from GitHub whenever you
+want to lock things down.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/15dadaa6-8fbe-4123-9b71-24a09a84416b) and click on Share -> Publish.

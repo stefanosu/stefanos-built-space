@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import Writing from "./pages/Writing";
 import BlogPost from "./pages/BlogPost";
+import AdminWrite from "./pages/AdminWrite";
 import PortfolioPage from "./pages/PortfolioPage";
 import PublicationsPage from "./pages/PublicationsPage";
 import NotFound from "./pages/NotFound";
@@ -22,6 +23,7 @@ function AppRoutes() {
       <Routes location={location}>
         <Route path="/" element={<Index />} />
         <Route path="/writing" element={<Writing />} />
+        <Route path="/writing/admin" element={<AdminWrite />} />
         <Route path="/writing/:slug" element={<BlogPost />} />
         <Route path="/portfolio" element={<PortfolioPage />} />
         <Route path="/publications" element={<PublicationsPage />} />

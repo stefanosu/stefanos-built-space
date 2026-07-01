@@ -32,6 +32,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VITE_ADMIN_PASSWORD_HASH: ${{ secrets.VITE_ADMIN_PASSWORD_HASH }}
 
       # Make sure Pages doesn’t try to build Jekyll and that your CNAME is present
       - name: Add .nojekyll
