@@ -5,7 +5,7 @@ const BLOG_POSTS = {
   "claude-code": {
     title: "I Built a Toy Payment Processor With Claude Code — Here's What That Workflow Actually Looked Like",
     description: "I built a toy payment processor with Claude Code to explore what AI-assisted engineering actually looks like when the design decisions stay yours.",
-    image: "https://stefanosugbit.com/og-preview.png"
+    image: "https://stefanosugbit.com/blog/claude-code/charge-success.png"
   },
   "testing-your-architecture-decisions": {
     title: "Testing Your Architecture Decisions",
