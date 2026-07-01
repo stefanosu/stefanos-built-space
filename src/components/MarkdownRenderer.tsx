@@ -7,6 +7,25 @@ interface MarkdownRendererProps {
   className?: string;
 }
 
+// Rendered as a named component (rather than inline) so the `p` override below
+// can detect "this paragraph is just an image" and avoid nesting a <figure>
+// (block content) inside a <p>.
+const MarkdownImage = ({ src, alt }: { src?: string; alt?: string }) => (
+  <figure className="my-8 max-w-2xl mx-auto">
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      className="w-full h-auto rounded-xl border border-border/50 shadow-soft bg-card p-2"
+    />
+    {alt && (
+      <figcaption className="mt-3 text-center text-sm text-muted-foreground italic">
+        {alt}
+      </figcaption>
+    )}
+  </figure>
+);
+
 const MarkdownRenderer = ({ content, className }: MarkdownRendererProps) => {
   return (
     <div className={className ?? "prose prose-invert prose-lg max-w-none"}>
@@ -42,11 +61,20 @@ const MarkdownRenderer = ({ content, className }: MarkdownRendererProps) => {
           h3: ({ children }) => (
             <h3 className="text-2xl font-semibold mb-3 mt-8">{children}</h3>
           ),
-          p: ({ children }) => (
-            <p className="text-foreground/90 leading-relaxed mb-6">
-              {children}
-            </p>
-          ),
+          p: ({ children, node }) => {
+            // Check if paragraph contains only an image by looking at the AST node
+            const hasOnlyImage =
+              node?.children?.length === 1 &&
+              node.children[0].type === "image";
+            if (hasOnlyImage) {
+              return <>{children}</>;
+            }
+            return (
+              <p className="text-foreground/90 leading-relaxed mb-6">
+                {children}
+              </p>
+            );
+          },
           ul: ({ children }) => (
             <ul className="list-disc list-inside space-y-2 mb-6 ml-4">
               {children}
@@ -68,6 +96,7 @@ const MarkdownRenderer = ({ content, className }: MarkdownRendererProps) => {
               {children}
             </a>
           ),
+          img: MarkdownImage,
         }}
       >
         {content}
