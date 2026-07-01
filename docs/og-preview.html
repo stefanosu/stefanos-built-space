@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OG Preview Image</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #111;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .card {
+      width: 1200px;
+      height: 630px;
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #16213e 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Subtle gradient orbs */
+    .card::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+      top: -200px;
+      right: -100px;
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+      bottom: -150px;
+      left: -100px;
+    }
+
+    .content {
+      text-align: center;
+      z-index: 1;
+      padding: 60px;
+    }
+
+    .name {
+      font-size: 72px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+    }
+
+    .title {
+      font-size: 28px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 40px;
+    }
+
+    .divider {
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #6366f1, #a855f7);
+      margin: 0 auto 40px;
+      border-radius: 2px;
+    }
+
+    .tagline {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.5);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .accent {
+      color: #818cf8;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="content">
+      <h1 class="name">Stefanos Ugbit</h1>
+      <p class="title">Software Engineer <span class="accent">&</span> Published Author</p>
+      <div class="divider"></div>
+      <p class="tagline">Building reliable software with clean architecture.<br>Writing poetry that explores personal growth.</p>
+    </div>
+  </div>
+</body>
+</html>
