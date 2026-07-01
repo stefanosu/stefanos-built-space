@@ -35,12 +35,6 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    // Only process HTML requests
-    const accept = request.headers.get("Accept") || "";
-    if (!accept.includes("text/html")) {
-      return fetch(request);
-    }
-
     // Check if this is a blog post URL
     const blogMatch = path.match(/^\/writing\/([^\/]+)\/?$/);
 
@@ -64,38 +58,38 @@ export default {
       }
     }
 
-    // Replace OG tags in the HTML
+    // Replace OG tags - handle multi-line meta tags
     html = html
       .replace(
-        /<meta property="og:title"[^>]*content="[^"]*"[^>]*>/,
+        /<meta\s+property="og:title"[\s\S]*?\/>/,
         `<meta property="og:title" content="${escapeHtml(og.title)}" />`
       )
       .replace(
-        /<meta property="og:description"[^>]*content="[^"]*"[^>]*>/,
+        /<meta\s+property="og:description"[\s\S]*?\/>/,
         `<meta property="og:description" content="${escapeHtml(og.description)}" />`
       )
       .replace(
-        /<meta property="og:url"[^>]*content="[^"]*"[^>]*>/,
+        /<meta\s+property="og:url"[\s\S]*?\/>/,
         `<meta property="og:url" content="https://stefanosugbit.com${path}" />`
       )
       .replace(
-        /<meta property="og:image"[^>]*content="[^"]*"[^>]*>/,
+        /<meta\s+property="og:image"[\s\S]*?\/>/,
         `<meta property="og:image" content="${og.image}" />`
       )
       .replace(
-        /<meta name="twitter:title"[^>]*content="[^"]*"[^>]*>/,
+        /<meta\s+name="twitter:title"[\s\S]*?\/>/,
         `<meta name="twitter:title" content="${escapeHtml(og.title)}" />`
       )
       .replace(
-        /<meta name="twitter:description"[^>]*content="[^"]*"[^>]*>/,
+        /<meta\s+name="twitter:description"[\s\S]*?\/>/,
         `<meta name="twitter:description" content="${escapeHtml(og.description)}" />`
       )
       .replace(
-        /<meta name="twitter:url"[^>]*content="[^"]*"[^>]*>/,
+        /<meta\s+name="twitter:url"[\s\S]*?\/>/,
         `<meta name="twitter:url" content="https://stefanosugbit.com${path}" />`
       )
       .replace(
-        /<meta name="twitter:image"[^>]*content="[^"]*"[^>]*>/,
+        /<meta\s+name="twitter:image"[\s\S]*?\/>/,
         `<meta name="twitter:image" content="${og.image}" />`
       )
       // Also update the page title for blog posts
@@ -109,17 +103,21 @@ export default {
     // Set og:type to article for blog posts
     if (blogMatch) {
       html = html.replace(
-        /<meta property="og:type"[^>]*content="[^"]*"[^>]*>/,
+        /<meta\s+property="og:type"[\s\S]*?\/>/,
         `<meta property="og:type" content="article" />`
       );
     }
 
+    // Return 200 for valid blog posts (GitHub Pages returns 404 for SPA routes)
+    const status = blogMatch && BLOG_POSTS[blogMatch[1]] ? 200 : response.status;
+
+    // Build clean headers
+    const newHeaders = new Headers();
+    newHeaders.set("Content-Type", "text/html;charset=UTF-8");
+
     return new Response(html, {
-      status: response.status,
-      headers: {
-        ...Object.fromEntries(response.headers),
-        "Content-Type": "text/html;charset=UTF-8"
-      }
+      status: status,
+      headers: newHeaders
     });
   }
 };
