@@ -1,0 +1,9 @@
+name = "og-inject"
+main = "og-inject.js"
+compatibility_date = "2024-01-01"
+
+# This worker should be deployed as a Cloudflare Pages Function
+# or attached to your domain via Routes in the Cloudflare Dashboard
+#
+# Route example (set in Cloudflare Dashboard):
+# stefanosugbit.com/*
