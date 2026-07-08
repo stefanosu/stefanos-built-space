@@ -40,9 +40,9 @@ After that my prompts got short. "Write the idempotency tests for POST /payments
 Payment APIs get retried. Timeouts, client crashes, load balancers. If the same charge request runs twice you need the same response back, not a second charge.
 
 \`\`\`typescript
-it('same key + same body returns identical response', async () => {
-  const idempotencyKey = 'test-key-1';
-  const body = { amount: 1000 };
+it('same key + same body returns identical response', async (): Promise<void> => {
+  const idempotencyKey: string = 'test-key-1';
+  const body: { amount: number } = { amount: 1000 };
 
   const res1 = await request(app)
     .post('/payments')
@@ -62,7 +62,7 @@ it('same key + same body returns identical response', async () => {
 Because of the "both directions" convention I also got the rejection case without asking for it:
 
 \`\`\`typescript
-it('same key + different amount returns 422', async () => {
+it('same key + different amount returns 422', async (): Promise<void> => {
   await request(app)
     .post('/payments')
     .set('Idempotency-Key', 'key-1')
@@ -84,7 +84,7 @@ Claude did ask me a real question here: should a mismatched key return the origi
 \`0.1 + 0.2 !== 0.3\` in JavaScript. Everyone knows this and the bugs still ship. Amounts in this system are integer cents, anything else fails validation.
 
 \`\`\`typescript
-it('rejects decimal amounts', async () => {
+it('rejects decimal amounts', async (): Promise<void> => {
   const res = await request(app)
     .post('/payments')
     .send({ amount: 10.99 }); // dollars, not cents
@@ -93,7 +93,7 @@ it('rejects decimal amounts', async () => {
   expect(res.body.error).toContain('integer');
 });
 
-it('accepts integer cents', async () => {
+it('accepts integer cents', async (): Promise<void> => {
   const res = await request(app)
     .post('/payments')
     .send({ amount: 1099 }); // $10.99 as cents
@@ -111,8 +111,8 @@ Partial refunds are where money goes missing. 333 + 333 + 334 has to equal 1000,
 At Faroe I built systems that caught these mismatches after the fact, during reconciliation. Way cheaper to make them impossible up front.
 
 \`\`\`typescript
-it('multiple partial refunds sum correctly', async () => {
-  const payment = createPayment(1000, 'succeeded');
+it('multiple partial refunds sum correctly', async (): Promise<void> => {
+  const payment: Payment = createPayment(1000, 'succeeded');
 
   await request(app).post(\`/payments/\${payment.id}/refund\`).send({ amount: 333 });
   await request(app).post(\`/payments/\${payment.id}/refund\`).send({ amount: 333 });
@@ -123,8 +123,8 @@ it('multiple partial refunds sum correctly', async () => {
   expect(check.body.status).toBe('refunded');
 });
 
-it('rejects refund exceeding remaining balance', async () => {
-  const payment = createPayment(1000, 'succeeded');
+it('rejects refund exceeding remaining balance', async (): Promise<void> => {
+  const payment: Payment = createPayment(1000, 'succeeded');
   await request(app).post(\`/payments/\${payment.id}/refund\`).send({ amount: 600 });
 
   const res = await request(app)
