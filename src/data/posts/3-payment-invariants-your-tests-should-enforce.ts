@@ -39,7 +39,7 @@ After that my prompts got short. "Write the idempotency tests for POST /payments
 
 Payment APIs get retried. Timeouts, client crashes, load balancers. If the same charge request runs twice you need the same response back, not a second charge.
 
-\`\`\`javascript
+\`\`\`typescript
 it('same key + same body returns identical response', async () => {
   const idempotencyKey = 'test-key-1';
   const body = { amount: 1000 };
@@ -61,7 +61,7 @@ it('same key + same body returns identical response', async () => {
 
 Because of the "both directions" convention I also got the rejection case without asking for it:
 
-\`\`\`javascript
+\`\`\`typescript
 it('same key + different amount returns 422', async () => {
   await request(app)
     .post('/payments')
@@ -83,7 +83,7 @@ Claude did ask me a real question here: should a mismatched key return the origi
 
 \`0.1 + 0.2 !== 0.3\` in JavaScript. Everyone knows this and the bugs still ship. Amounts in this system are integer cents, anything else fails validation.
 
-\`\`\`javascript
+\`\`\`typescript
 it('rejects decimal amounts', async () => {
   const res = await request(app)
     .post('/payments')
@@ -110,7 +110,7 @@ Partial refunds are where money goes missing. 333 + 333 + 334 has to equal 1000,
 
 At Faroe I built systems that caught these mismatches after the fact, during reconciliation. Way cheaper to make them impossible up front.
 
-\`\`\`javascript
+\`\`\`typescript
 it('multiple partial refunds sum correctly', async () => {
   const payment = createPayment(1000, 'succeeded');
 
