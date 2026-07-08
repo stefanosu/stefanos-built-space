@@ -1,34 +1,39 @@
 // Cloudflare Worker to inject dynamic OG tags for blog posts
-// Deploy this via Cloudflare Dashboard or wrangler
+// Fetches post metadata from posts-meta.json generated at build time
 
-const BLOG_POSTS = {
-  "claude-code": {
-    title: "I Built a Toy Payment Processor With Claude Code — Here's What That Workflow Actually Looked Like",
-    description: "I built a toy payment processor with Claude Code to explore what AI-assisted engineering actually looks like when the design decisions stay yours.",
-    image: "https://stefanosugbit.com/blog/claude-code/charge-success.png"
-  },
-  "testing-your-architecture-decisions": {
-    title: "Testing Your Architecture Decisions",
-    description: "How to validate architectural choices before they become expensive mistakes.",
-    image: "https://stefanosugbit.com/og-preview.png"
-  },
-  "integration-testing-patterns-that-actually-work": {
-    title: "Integration Testing Patterns That Actually Work",
-    description: "Practical patterns for integration tests that are fast, reliable, and maintainable.",
-    image: "https://stefanosugbit.com/og-preview.png"
-  },
-  "controllers-or-services-where-should-orchestration-live": {
-    title: "Controllers or Services: Where Should Orchestration Live?",
-    description: "Exploring where business logic orchestration belongs in your application architecture.",
-    image: "https://stefanosugbit.com/og-preview.png"
-  }
-};
+const ORIGIN = "https://stefanosugbit.github.io/stefanos-built-space";
+const SITE_URL = "https://stefanosugbit.com";
 
 const DEFAULT_OG = {
-  title: "Stefanos Ugbit • Software Engineer & Published Author",
+  title: "Stefanos Ugbit - Software Engineer & Published Author",
   description: "Full-stack software engineer and published author. Building reliable software with clean architecture, and writing poetry that explores personal growth.",
-  image: "https://stefanosugbit.com/og-preview.png"
+  image: `${SITE_URL}/og-preview.png`
 };
+
+// Cache for posts metadata (refreshed on each deployment)
+let postsCache = null;
+let postsCacheTime = 0;
+const CACHE_TTL = 60 * 1000; // 1 minute cache
+
+async function getPostsMeta() {
+  const now = Date.now();
+  if (postsCache && (now - postsCacheTime) < CACHE_TTL) {
+    return postsCache;
+  }
+
+  try {
+    const response = await fetch(`${ORIGIN}/posts-meta.json`);
+    if (response.ok) {
+      postsCache = await response.json();
+      postsCacheTime = now;
+      return postsCache;
+    }
+  } catch (e) {
+    console.error("Failed to fetch posts-meta.json:", e);
+  }
+
+  return {};
+}
 
 export default {
   async fetch(request, env, ctx) {
@@ -38,8 +43,13 @@ export default {
     // Check if this is a blog post URL
     const blogMatch = path.match(/^\/writing\/([^\/]+)\/?$/);
 
-    // Fetch the original response
-    const response = await fetch(request);
+    // Fetch the original response from GitHub Pages
+    const originUrl = new URL(path, ORIGIN);
+    originUrl.search = url.search;
+
+    const response = await fetch(originUrl.toString(), {
+      headers: request.headers,
+    });
 
     // Only modify HTML responses
     const contentType = response.headers.get("Content-Type") || "";
@@ -51,14 +61,23 @@ export default {
 
     // Determine which OG tags to use
     let og = DEFAULT_OG;
+    let isValidPost = false;
+
     if (blogMatch) {
       const slug = blogMatch[1];
-      if (BLOG_POSTS[slug]) {
-        og = BLOG_POSTS[slug];
+      const posts = await getPostsMeta();
+
+      if (posts[slug]) {
+        og = {
+          title: posts[slug].title,
+          description: posts[slug].description,
+          image: posts[slug].image
+        };
+        isValidPost = true;
       }
     }
 
-    // Replace OG tags - handle multi-line meta tags
+    // Replace OG tags
     html = html
       .replace(
         /<meta\s+property="og:title"[\s\S]*?\/>/,
@@ -70,7 +89,7 @@ export default {
       )
       .replace(
         /<meta\s+property="og:url"[\s\S]*?\/>/,
-        `<meta property="og:url" content="https://stefanosugbit.com${path}" />`
+        `<meta property="og:url" content="${SITE_URL}${path}" />`
       )
       .replace(
         /<meta\s+property="og:image"[\s\S]*?\/>/,
@@ -86,22 +105,21 @@ export default {
       )
       .replace(
         /<meta\s+name="twitter:url"[\s\S]*?\/>/,
-        `<meta name="twitter:url" content="https://stefanosugbit.com${path}" />`
+        `<meta name="twitter:url" content="${SITE_URL}${path}" />`
       )
       .replace(
         /<meta\s+name="twitter:image"[\s\S]*?\/>/,
         `<meta name="twitter:image" content="${og.image}" />`
       )
-      // Also update the page title for blog posts
       .replace(
         /<title>[^<]*<\/title>/,
-        blogMatch && BLOG_POSTS[blogMatch[1]]
+        isValidPost
           ? `<title>${escapeHtml(og.title)} | Stefanos Ugbit</title>`
           : `<title>${escapeHtml(og.title)}</title>`
       );
 
     // Set og:type to article for blog posts
-    if (blogMatch) {
+    if (isValidPost) {
       html = html.replace(
         /<meta\s+property="og:type"[\s\S]*?\/>/,
         `<meta property="og:type" content="article" />`
@@ -109,15 +127,14 @@ export default {
     }
 
     // Return 200 for valid blog posts (GitHub Pages returns 404 for SPA routes)
-    const status = blogMatch && BLOG_POSTS[blogMatch[1]] ? 200 : response.status;
-
-    // Build clean headers
-    const newHeaders = new Headers();
-    newHeaders.set("Content-Type", "text/html;charset=UTF-8");
+    const status = isValidPost ? 200 : response.status;
 
     return new Response(html, {
       status: status,
-      headers: newHeaders
+      headers: {
+        "Content-Type": "text/html;charset=UTF-8",
+        "Cache-Control": "public, max-age=60"
+      }
     });
   }
 };
