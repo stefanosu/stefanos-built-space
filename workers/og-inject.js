@@ -1,57 +1,51 @@
-// Cloudflare Worker to inject dynamic OG tags for blog posts
-// Fetches post metadata from posts-meta.json generated at build time
+// This file is auto-deployed by GitHub Actions when posts change.
+// See .github/workflows/deploy-worker.yml
+//
+// To test locally, you can manually update BLOG_POSTS below.
 
-const SITE_URL = "https://stefanosugbit.com";
-
-const DEFAULT_OG = {
-  title: "Stefanos Ugbit - Software Engineer & Published Author",
-  description: "Full-stack software engineer and published author. Building reliable software with clean architecture, and writing poetry that explores personal growth.",
-  image: `${SITE_URL}/og-preview.png`
+const BLOG_POSTS = {
+  "claude-code": {
+    title: "I Built a Toy Payment Processor With Claude Code — Here's What That Workflow Actually Looked Like",
+    description: "I built a toy payment processor with Claude Code to explore what AI-assisted engineering actually looks like when the design decisions stay yours.",
+    image: "https://stefanosugbit.com/blog/claude-code/charge-success.png"
+  },
+  "testing-your-architecture-decisions": {
+    title: "Testing Your Architecture Decisions",
+    description: "How to validate architectural choices before they become expensive mistakes.",
+    image: "https://stefanosugbit.com/og-preview.png"
+  },
+  "integration-testing-patterns-that-actually-work": {
+    title: "Integration Testing Patterns That Actually Work",
+    description: "Practical patterns for integration tests that are fast, reliable, and maintainable.",
+    image: "https://stefanosugbit.com/og-preview.png"
+  },
+  "controllers-or-services-where-should-orchestration-live": {
+    title: "Controllers or Services: Where Should Orchestration Live?",
+    description: "Exploring where business logic orchestration belongs in your application architecture.",
+    image: "https://stefanosugbit.com/og-preview.png"
+  },
+  "3-payment-invariants-your-tests-should-enforce": {
+    title: "3 Payment Invariants Your Tests Should Enforce",
+    description: "I'm still working through how to use Claude Code on real builds without outsourcing the thinking. This week that meant writing tests for the toy payment processor — and figuring out how to make domain knowledge stick between prompts.",
+    image: "https://stefanosugbit.com/og-preview.png"
+  }
 };
 
-// Cache for posts metadata (refreshed on each deployment)
-let postsCache = null;
-let postsCacheTime = 0;
-const CACHE_TTL = 60 * 1000; // 1 minute cache
-
-async function getPostsMeta(request) {
-  const now = Date.now();
-  if (postsCache && (now - postsCacheTime) < CACHE_TTL) {
-    return postsCache;
-  }
-
-  try {
-    // Fetch posts-meta.json from the same origin (passes through to GitHub Pages)
-    const metaUrl = new URL("/posts-meta.json", request.url);
-    const response = await fetch(metaUrl.toString(), {
-      cf: { cacheTtl: 300 } // Cache at edge for 5 minutes
-    });
-    if (response.ok) {
-      postsCache = await response.json();
-      postsCacheTime = now;
-      return postsCache;
-    }
-  } catch (e) {
-    console.error("Failed to fetch posts-meta.json:", e);
-  }
-
-  return {};
-}
+const DEFAULT_OG = {
+  title: "Stefanos Ugbit • Software Engineer & Published Author",
+  description: "Full-stack software engineer and published author. Building reliable software with clean architecture, and writing poetry that explores personal growth.",
+  image: "https://stefanosugbit.com/og-preview.png"
+};
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    // Don't process posts-meta.json requests (avoid infinite loop)
-    if (path === "/posts-meta.json") {
-      return fetch(request);
-    }
-
     // Check if this is a blog post URL
     const blogMatch = path.match(/^\/writing\/([^\/]+)\/?$/);
 
-    // Fetch the original response (passes through Cloudflare to GitHub Pages)
+    // Fetch the original response
     const response = await fetch(request);
 
     // Only modify HTML responses
@@ -64,19 +58,10 @@ export default {
 
     // Determine which OG tags to use
     let og = DEFAULT_OG;
-    let isValidPost = false;
-
     if (blogMatch) {
       const slug = blogMatch[1];
-      const posts = await getPostsMeta(request);
-
-      if (posts[slug]) {
-        og = {
-          title: posts[slug].title,
-          description: posts[slug].description,
-          image: posts[slug].image
-        };
-        isValidPost = true;
+      if (BLOG_POSTS[slug]) {
+        og = BLOG_POSTS[slug];
       }
     }
 
@@ -92,7 +77,7 @@ export default {
       )
       .replace(
         /<meta\s+property="og:url"[\s\S]*?\/>/,
-        `<meta property="og:url" content="${SITE_URL}${path}" />`
+        `<meta property="og:url" content="https://stefanosugbit.com${path}" />`
       )
       .replace(
         /<meta\s+property="og:image"[\s\S]*?\/>/,
@@ -108,7 +93,7 @@ export default {
       )
       .replace(
         /<meta\s+name="twitter:url"[\s\S]*?\/>/,
-        `<meta name="twitter:url" content="${SITE_URL}${path}" />`
+        `<meta name="twitter:url" content="https://stefanosugbit.com${path}" />`
       )
       .replace(
         /<meta\s+name="twitter:image"[\s\S]*?\/>/,
@@ -116,13 +101,13 @@ export default {
       )
       .replace(
         /<title>[^<]*<\/title>/,
-        isValidPost
+        blogMatch && BLOG_POSTS[blogMatch[1]]
           ? `<title>${escapeHtml(og.title)} | Stefanos Ugbit</title>`
           : `<title>${escapeHtml(og.title)}</title>`
       );
 
     // Set og:type to article for blog posts
-    if (isValidPost) {
+    if (blogMatch) {
       html = html.replace(
         /<meta\s+property="og:type"[\s\S]*?\/>/,
         `<meta property="og:type" content="article" />`
@@ -130,14 +115,11 @@ export default {
     }
 
     // Return 200 for valid blog posts (GitHub Pages returns 404 for SPA routes)
-    const status = isValidPost ? 200 : response.status;
+    const status = blogMatch && BLOG_POSTS[blogMatch[1]] ? 200 : response.status;
 
     return new Response(html, {
       status: status,
-      headers: {
-        "Content-Type": "text/html;charset=UTF-8",
-        "Cache-Control": "public, max-age=60"
-      }
+      headers: { "Content-Type": "text/html;charset=UTF-8" }
     });
   }
 };
