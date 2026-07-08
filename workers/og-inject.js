@@ -1,7 +1,6 @@
 // Cloudflare Worker to inject dynamic OG tags for blog posts
 // Fetches post metadata from posts-meta.json generated at build time
 
-const ORIGIN = "https://stefanosugbit.github.io/stefanos-built-space";
 const SITE_URL = "https://stefanosugbit.com";
 
 const DEFAULT_OG = {
@@ -15,14 +14,18 @@ let postsCache = null;
 let postsCacheTime = 0;
 const CACHE_TTL = 60 * 1000; // 1 minute cache
 
-async function getPostsMeta() {
+async function getPostsMeta(request) {
   const now = Date.now();
   if (postsCache && (now - postsCacheTime) < CACHE_TTL) {
     return postsCache;
   }
 
   try {
-    const response = await fetch(`${ORIGIN}/posts-meta.json`);
+    // Fetch posts-meta.json from the same origin (passes through to GitHub Pages)
+    const metaUrl = new URL("/posts-meta.json", request.url);
+    const response = await fetch(metaUrl.toString(), {
+      cf: { cacheTtl: 300 } // Cache at edge for 5 minutes
+    });
     if (response.ok) {
       postsCache = await response.json();
       postsCacheTime = now;
@@ -40,16 +43,16 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
+    // Don't process posts-meta.json requests (avoid infinite loop)
+    if (path === "/posts-meta.json") {
+      return fetch(request);
+    }
+
     // Check if this is a blog post URL
     const blogMatch = path.match(/^\/writing\/([^\/]+)\/?$/);
 
-    // Fetch the original response from GitHub Pages
-    const originUrl = new URL(path, ORIGIN);
-    originUrl.search = url.search;
-
-    const response = await fetch(originUrl.toString(), {
-      headers: request.headers,
-    });
+    // Fetch the original response (passes through Cloudflare to GitHub Pages)
+    const response = await fetch(request);
 
     // Only modify HTML responses
     const contentType = response.headers.get("Content-Type") || "";
@@ -65,7 +68,7 @@ export default {
 
     if (blogMatch) {
       const slug = blogMatch[1];
-      const posts = await getPostsMeta();
+      const posts = await getPostsMeta(request);
 
       if (posts[slug]) {
         og = {
