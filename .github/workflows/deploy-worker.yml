@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - 'src/data/posts/**'
-      - 'scripts/generate-og-worker.js'
+      - 'scripts/generate-og-worker.cjs'
   workflow_dispatch:
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
           node-version: 20
 
       - name: Generate worker with embedded posts
-        run: node scripts/generate-og-worker.js
+        run: node scripts/generate-og-worker.cjs
 
       - name: Deploy to Cloudflare
         env:
