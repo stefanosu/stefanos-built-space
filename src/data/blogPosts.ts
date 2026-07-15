@@ -1,14 +1,11 @@
 import type { BlogPost } from "./types";
-import { fetchPosts as apiFetchPosts, fetchPost as apiFetchPost } from "@/lib/postsApi";
-import type { PostMeta } from "@/lib/postsApi";
 
 export type { BlogPost };
-export type { PostMeta };
 
-export async function fetchPosts(): Promise<PostMeta[]> {
-  return apiFetchPosts();
-}
+const modules = import.meta.glob<{ default: BlogPost }>("./posts/*.ts", {
+  eager: true,
+});
 
-export async function fetchPost(slug: string): Promise<BlogPost | null> {
-  return apiFetchPost(slug);
-}
+export const blogPosts: BlogPost[] = Object.values(modules)
+  .map((m) => m.default)
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

@@ -1,62 +1,14 @@
-import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Clock, Loader2 } from "lucide-react";
+import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchPost, type BlogPost as BlogPostType } from "@/data/blogPosts";
+import { blogPosts } from "@/data/blogPosts";
 import { Button } from "@/components/ui/button";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [post, setPost] = useState<BlogPostType | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!slug) {
-      setLoading(false);
-      return;
-    }
-
-    fetchPost(slug)
-      .then(setPost)
-      .catch((err) => setError(err.message || "Failed to load post"))
-      .finally(() => setLoading(false));
-  }, [slug]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1 pt-24 flex items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1 pt-24 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4 text-destructive">Error</h1>
-            <p className="text-muted-foreground mb-6">{error}</p>
-            <Button asChild variant="outline">
-              <Link to="/writing">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Writing
-              </Link>
-            </Button>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  const post = blogPosts.find((p) => p.slug === slug);
 
   if (!post) {
     return (
