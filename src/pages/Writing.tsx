@@ -1,12 +1,24 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { PenLine } from "lucide-react";
+import { PenLine, Loader2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogStack from "@/components/BlogStack";
 import { Button } from "@/components/ui/button";
-import { blogPosts } from "@/data/blogPosts";
+import { fetchPosts, type PostMeta } from "@/data/blogPosts";
 
 const Writing = () => {
+  const [posts, setPosts] = useState<PostMeta[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchPosts()
+      .then(setPosts)
+      .catch((err) => setError(err.message || "Failed to load posts"))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -34,7 +46,21 @@ const Writing = () => {
             </div>
 
             <div className="animate-slide-up">
-              <BlogStack posts={blogPosts} />
+              {loading ? (
+                <div className="flex items-center justify-center py-16">
+                  <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                </div>
+              ) : error ? (
+                <div className="text-center py-16 text-destructive">
+                  <p>{error}</p>
+                </div>
+              ) : posts.length === 0 ? (
+                <div className="text-center py-16 text-muted-foreground">
+                  <p>No posts yet.</p>
+                </div>
+              ) : (
+                <BlogStack posts={posts} />
+              )}
             </div>
           </div>
         </div>

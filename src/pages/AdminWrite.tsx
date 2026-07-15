@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, Loader2, Pencil, ShieldAlert, Trash2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Loader2, Pencil, Trash2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PasswordGate from "@/components/admin/PasswordGate";
@@ -9,21 +9,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { blogPosts } from "@/data/blogPosts";
 import type { BlogPost } from "@/data/types";
 import {
-  GitHubApiError,
-  POSTS_DIR,
-  deleteFile,
-  getFile,
-  putFile,
-  verifyToken,
-} from "@/lib/github";
+  fetchPosts,
+  fetchPost,
+  savePost,
+  deletePost,
+  PostsApiError,
+  type PostMeta,
+} from "@/lib/postsApi";
 
-const TOKEN_STORAGE_KEY = "admin-github-token";
+const PASSWORD_STORAGE_KEY = "admin-password";
 
 function slugify(input: string): string {
   return input
@@ -39,29 +37,6 @@ function estimateReadTime(markdown: string): string {
   const words = markdown.trim().split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(1, Math.round(words / 200));
   return `${minutes} min read`;
-}
-
-function escapeForTemplateLiteral(value: string): string {
-  return value.replace(/\\/g, "\\\\").replace(/`/g, "\\`").replace(/\$\{/g, "\\${");
-}
-
-function generatePostFileContent(post: BlogPost): string {
-  return `import { BlogPost } from "../types";
-
-const post: BlogPost = {
-  slug: ${JSON.stringify(post.slug)},
-  title: ${JSON.stringify(post.title)},
-  excerpt: ${JSON.stringify(post.excerpt)},
-  content: \`
-${escapeForTemplateLiteral(post.content)}
-  \`,
-  date: ${JSON.stringify(post.date)},
-  readTime: ${JSON.stringify(post.readTime)},
-  tags: ${JSON.stringify(post.tags)},
-};
-
-export default post;
-`;
 }
 
 const emptyForm = {
@@ -82,33 +57,36 @@ type Status =
   | { type: "error"; message: string };
 
 const AdminWriteEditor = () => {
-  const [postsList, setPostsList] = useState<BlogPost[]>(blogPosts);
+  const [postsList, setPostsList] = useState<PostMeta[]>([]);
+  const [postsLoading, setPostsLoading] = useState(true);
   const [form, setForm] = useState(emptyForm);
   const [slugTouched, setSlugTouched] = useState(false);
   const [readTimeTouched, setReadTimeTouched] = useState(false);
   const [status, setStatus] = useState<Status>({ type: "idle" });
 
-  const [token, setToken] = useState("");
-  const [rememberToken, setRememberToken] = useState(false);
-  const [tokenStatus, setTokenStatus] = useState<
-    { type: "idle" } | { type: "checking" } | { type: "valid" } | { type: "invalid"; message: string }
-  >({ type: "idle" });
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
-    const saved = localStorage.getItem(TOKEN_STORAGE_KEY);
+    const saved = localStorage.getItem(PASSWORD_STORAGE_KEY);
     if (saved) {
-      setToken(saved);
-      setRememberToken(true);
+      setPassword(saved);
     }
   }, []);
 
   useEffect(() => {
-    if (rememberToken && token) {
-      localStorage.setItem(TOKEN_STORAGE_KEY, token);
-    } else if (!rememberToken) {
-      localStorage.removeItem(TOKEN_STORAGE_KEY);
+    if (password) {
+      localStorage.setItem(PASSWORD_STORAGE_KEY, password);
     }
-  }, [token, rememberToken]);
+  }, [password]);
+
+  useEffect(() => {
+    fetchPosts()
+      .then(setPostsList)
+      .catch((err) => {
+        console.error("Failed to load posts:", err);
+      })
+      .finally(() => setPostsLoading(false));
+  }, []);
 
   const computedReadTime = useMemo(
     () => estimateReadTime(form.content),
@@ -134,62 +112,56 @@ const AdminWriteEditor = () => {
     setStatus({ type: "idle" });
   };
 
-  const loadPostIntoForm = (post: BlogPost) => {
-    setForm({
-      originalSlug: post.slug,
-      slug: post.slug,
-      title: post.title,
-      excerpt: post.excerpt,
-      content: post.content.trim(),
-      date: post.date,
-      readTime: post.readTime,
-      tagsInput: post.tags.join(", "),
-    });
-    setSlugTouched(true);
-    setReadTimeTouched(true);
-    setStatus({ type: "idle" });
-    window.scrollTo({ top: document.getElementById("editor")?.offsetTop ?? 0, behavior: "smooth" });
-  };
-
-  const handleVerifyToken = async () => {
-    if (!token) return;
-    setTokenStatus({ type: "checking" });
+  const loadPostIntoForm = async (meta: PostMeta) => {
+    setStatus({ type: "publishing" });
     try {
-      await verifyToken(token);
-      setTokenStatus({ type: "valid" });
+      const fullPost = await fetchPost(meta.slug);
+      if (!fullPost) {
+        setStatus({ type: "error", message: "Could not load post content." });
+        return;
+      }
+      setForm({
+        originalSlug: fullPost.slug,
+        slug: fullPost.slug,
+        title: fullPost.title,
+        excerpt: fullPost.excerpt,
+        content: fullPost.content.trim(),
+        date: fullPost.date,
+        readTime: fullPost.readTime,
+        tagsInput: fullPost.tags.join(", "),
+      });
+      setSlugTouched(true);
+      setReadTimeTouched(true);
+      setStatus({ type: "idle" });
+      window.scrollTo({ top: document.getElementById("editor")?.offsetTop ?? 0, behavior: "smooth" });
     } catch (err) {
-      setTokenStatus({
-        type: "invalid",
-        message: err instanceof GitHubApiError ? err.message : "Could not verify token.",
+      setStatus({
+        type: "error",
+        message: err instanceof Error ? err.message : "Failed to load post.",
       });
     }
   };
 
-  const handleDelete = async (post: BlogPost) => {
-    if (!token) {
-      setStatus({ type: "error", message: "Enter your GitHub token before deleting posts." });
+  const handleDelete = async (meta: PostMeta) => {
+    if (!password) {
+      setStatus({ type: "error", message: "Enter your password before deleting posts." });
       return;
     }
-    if (!window.confirm(`Delete "${post.title}"? This commits directly to main.`)) {
+    if (!window.confirm(`Delete "${meta.title}"? This cannot be undone.`)) {
       return;
     }
     setStatus({ type: "publishing" });
     try {
-      const path = `${POSTS_DIR}/${post.slug}.ts`;
-      const existing = await getFile(token, path);
-      if (!existing) {
-        throw new Error("Could not find that post's file on GitHub.");
-      }
-      await deleteFile(token, path, `post: delete "${post.title}"`, existing.sha);
-      setPostsList((list) => list.filter((p) => p.slug !== post.slug));
+      await deletePost(password, meta.slug);
+      setPostsList((list) => list.filter((p) => p.slug !== meta.slug));
       setStatus({
         type: "success",
-        message: `Deleted "${post.title}". The live site will update in ~1-2 minutes.`,
+        message: `Deleted "${meta.title}".`,
       });
     } catch (err) {
       setStatus({
         type: "error",
-        message: err instanceof Error ? err.message : "Failed to delete post.",
+        message: err instanceof PostsApiError ? err.message : "Failed to delete post.",
       });
     }
   };
@@ -197,7 +169,7 @@ const AdminWriteEditor = () => {
   const handlePublish = async () => {
     setStatus({ type: "publishing" });
     try {
-      if (!token) throw new Error("Enter your GitHub token first.");
+      if (!password) throw new Error("Enter your password first.");
 
       const finalSlug = form.slug.trim() || slugify(form.title);
       if (!finalSlug) throw new Error("Title (or slug) is required.");
@@ -219,42 +191,42 @@ const AdminWriteEditor = () => {
         tags,
       };
 
-      const path = `${POSTS_DIR}/${finalSlug}.ts`;
-      const fileContent = generatePostFileContent(post);
-      const existing = await getFile(token, path);
-      const isUpdate = Boolean(existing);
-      const message = `post: ${isUpdate ? "update" : "publish"} "${post.title}"`;
+      const isUpdate = form.originalSlug !== null;
 
-      await putFile(token, path, fileContent, message, existing?.sha);
-
-      // If the slug changed while editing an existing post, remove the old file.
+      // If slug changed, delete old post first
       if (form.originalSlug && form.originalSlug !== finalSlug) {
-        const oldPath = `${POSTS_DIR}/${form.originalSlug}.ts`;
-        const oldFile = await getFile(token, oldPath);
-        if (oldFile) {
-          await deleteFile(token, oldPath, `post: rename "${post.title}"`, oldFile.sha);
-        }
+        await deletePost(password, form.originalSlug);
       }
+
+      await savePost(password, post);
 
       setPostsList((list) => {
         const withoutOld = list.filter(
           (p) => p.slug !== finalSlug && p.slug !== form.originalSlug
         );
-        return [post, ...withoutOld].sort(
+        const meta: PostMeta = {
+          slug: post.slug,
+          title: post.title,
+          excerpt: post.excerpt,
+          date: post.date,
+          readTime: post.readTime,
+          tags: post.tags,
+        };
+        return [meta, ...withoutOld].sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
       });
 
       setStatus({
         type: "success",
-        message: `${isUpdate ? "Updated" : "Published"} "${post.title}". GitHub Actions will redeploy the site in ~1-2 minutes.`,
+        message: `${isUpdate ? "Updated" : "Published"} "${post.title}". Changes are live immediately.`,
       });
       resetForm();
     } catch (err) {
       setStatus({
         type: "error",
         message:
-          err instanceof GitHubApiError
+          err instanceof PostsApiError
             ? err.message
             : err instanceof Error
             ? err.message
@@ -282,95 +254,59 @@ const AdminWriteEditor = () => {
               </Button>
               <h1 className="text-4xl font-semibold mb-2">Write a post</h1>
               <p className="text-muted-foreground">
-                Publishing commits directly to the <code>main</code> branch on
-                GitHub and triggers the usual deploy.
+                Posts are saved directly to the CMS and go live immediately.
               </p>
             </div>
 
-            <Alert>
-              <ShieldAlert className="h-4 w-4" />
-              <AlertTitle>Keep your token private</AlertTitle>
-              <AlertDescription>
-                Use a fine-grained GitHub personal access token scoped only to this
-                repo's "Contents: Read and write" permission. It's stored only in
-                this browser (never sent anywhere except GitHub's API) and you can
-                revoke it anytime from GitHub settings.
-              </AlertDescription>
-            </Alert>
-
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">GitHub token</CardTitle>
+                <CardTitle className="text-lg">Admin password</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Input
                     type="password"
-                    placeholder="ghp_..."
-                    value={token}
-                    onChange={(e) => {
-                      setToken(e.target.value);
-                      setTokenStatus({ type: "idle" });
-                    }}
+                    placeholder="Enter admin password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="flex-1"
                   />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleVerifyToken}
-                    disabled={!token || tokenStatus.type === "checking"}
-                  >
-                    {tokenStatus.type === "checking" ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      "Verify"
-                    )}
-                  </Button>
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <Checkbox
-                    id="remember-token"
-                    checked={rememberToken}
-                    onCheckedChange={(checked) => setRememberToken(checked === true)}
-                  />
-                  <Label htmlFor="remember-token" className="text-sm text-muted-foreground">
-                    Remember this token on this device
-                  </Label>
-                </div>
-
-                {tokenStatus.type === "valid" && (
-                  <p className="text-sm text-green-500 flex items-center gap-1">
-                    <CheckCircle2 className="w-4 h-4" /> Token verified.
-                  </p>
-                )}
-                {tokenStatus.type === "invalid" && (
-                  <p className="text-sm text-destructive">{tokenStatus.message}</p>
-                )}
+                <p className="text-sm text-muted-foreground">
+                  The same password used to access this page. Stored locally for convenience.
+                </p>
               </CardContent>
             </Card>
 
-            {postsList.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Existing posts</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {postsList.map((post) => (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Existing posts</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {postsLoading ? (
+                  <div className="flex items-center gap-2 py-4">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-sm text-muted-foreground">Loading posts...</span>
+                  </div>
+                ) : postsList.length === 0 ? (
+                  <p className="text-sm text-muted-foreground py-4">No posts yet.</p>
+                ) : (
+                  postsList.map((meta) => (
                     <div
-                      key={post.slug}
+                      key={meta.slug}
                       className="flex items-center justify-between gap-4 py-3 border-b border-border/50 last:border-0"
                     >
                       <div className="min-w-0">
-                        <p className="font-medium truncate">{post.title}</p>
-                        <p className="text-sm text-muted-foreground">{post.date}</p>
+                        <p className="font-medium truncate">{meta.title}</p>
+                        <p className="text-sm text-muted-foreground">{meta.date}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         <Button
                           type="button"
                           size="sm"
                           variant="outline"
-                          onClick={() => loadPostIntoForm(post)}
+                          onClick={() => loadPostIntoForm(meta)}
+                          disabled={isPublishing}
                         >
                           <Pencil className="w-4 h-4 mr-1" />
                           Edit
@@ -380,7 +316,7 @@ const AdminWriteEditor = () => {
                           size="sm"
                           variant="outline"
                           className="text-destructive hover:text-destructive"
-                          onClick={() => handleDelete(post)}
+                          onClick={() => handleDelete(meta)}
                           disabled={isPublishing}
                         >
                           <Trash2 className="w-4 h-4 mr-1" />
@@ -388,10 +324,10 @@ const AdminWriteEditor = () => {
                         </Button>
                       </div>
                     </div>
-                  ))}
-                </CardContent>
-              </Card>
-            )}
+                  ))
+                )}
+              </CardContent>
+            </Card>
 
             <Card id="editor">
               <CardHeader>

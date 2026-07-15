@@ -1,8 +1,8 @@
 import BlogPostCard from "@/components/BlogPostCard";
-import type { BlogPost } from "@/data/types";
+import type { PostMeta } from "@/lib/postsApi";
 
 interface BlogStackProps {
-  posts: BlogPost[];
+  posts: PostMeta[];
 }
 
 const BlogStack = ({ posts }: BlogStackProps) => {
