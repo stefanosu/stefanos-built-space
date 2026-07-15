@@ -4,13 +4,13 @@ const post: BlogPost = {
   slug: "the-claude-md-file-i-should-have-written-sooner",
   title: "The CLAUDE.md File I Should Have Written Sooner",
   excerpt:
-    "I didn't have a CLAUDE.md for the payment processor project until today. It's maybe 15 minutes to write, and it's worth it — here's why, and here's exactly what mine looks like.",
+    "I didn't have a CLAUDE.md for the payment processor project until today. It's maybe 15 minutes to write, and it's worth it. Here's why, and here's exactly what mine looks like.",
   content: `
-I actually didn't have a CLAUDE.md for the payment processor project that I was building until today. I just made mine this afternoon, and I should've done it much sooner because the CLAUDE.md file is the source of truth needed to make things more efficient as you build out a project — I usually have one in my other projects. I forgot it I think in part because of how simple this project is, but even in this case it's needed.
+I actually didn't have a CLAUDE.md for the payment processor project that I was building until today. I just made mine this afternoon, and I should've done it much sooner because the CLAUDE.md file is the source of truth needed to make things more efficient as you build out a project. I usually have one in my other projects. I forgot it I think in part because of how simple this project is, but even in this case it's needed.
 
-Anthropic's own docs describe it as a plain markdown file that you drop in your project root that Claude Code reads automatically at the start of every session — no pasting it in, no reminding it's there. It becomes part of the context the model already has before you type a single thing: your build/test commands, coding conventions, architecture calls you've already made, stuff to avoid. Basically the onboarding doc you can always refer to, which saves you time and cost because you're not re-explaining the same context in every conversation — that repeated back-and-forth adds up to more tokens over time than one persistent file would.
+Anthropic's own docs describe it as a plain markdown file that you drop in your project root that Claude Code reads automatically at the start of every session. No pasting it in, no reminding it's there. It becomes part of the context the model already has before you type a single thing: your build/test commands, coding conventions, architecture calls you've already made, stuff to avoid. Basically the onboarding doc you can always refer to, which saves you time and cost because you're not re-explaining the same context in every conversation. That repeated back-and-forth adds up to more tokens over time than one persistent file would.
 
-Without using it, every session starts from zero. I was re-explaining the same conventions, and watching the decisions I'd already made get quietly reopened, not because the model reasons badly, it just has no memory of last time unless you give it one.
+Without using it, every session starts from zero. I was re-explaining the same conventions, and watching the decisions I'd already made get quietly reopened. Not because the model reasons badly, it just has no memory of last time unless you give it one.
 
 ## What mine looks like
 
@@ -27,7 +27,7 @@ Built to explore fintech-style edge cases in a small, readable codebase.
 ## Stack & conventions
 - Express 5, TypeScript strict mode, CommonJS
 - ts-node-dev for local dev
-- Amounts are always integer cents (1099 = $10.99) — never floats. This is
+- Amounts are always integer cents (1099 = $10.99), never floats. This is
   non-negotiable even in a toy; it's the #1 source of real fintech bugs.
 - IDs are prefixed by type: pay_<uuid>, ref_<uuid>.
 
@@ -60,23 +60,23 @@ src/
 ## When adding a new endpoint or handler
 1. Write the edge cases down before writing the handler.
 2. Validate at the boundary (route/middleware), keep handlers focused on the happy-path business logic.
-3. Any new stateful entity gets its own store file under store/, mirroring the existing pattern — don't bolt extra fields onto Payment.
+3. Any new stateful entity gets its own store file under store/, mirroring the existing pattern. Don't bolt extra fields onto Payment.
 4. Throw AppError(status, message); don't handle HTTP status codes inline in handlers.
 
 ## Explicitly out of scope
 No auth, no real currency handling, no persistence layer, no webhooks. If a
-request seems to need one of these, flag it — don't quietly add scope.
+request seems to need one of these, flag it. Don't quietly add scope.
 \`\`\`
 
 ## What's actually in there
 
 A few things worth calling out:
 
-* **Amounts are cents, integers, never floats** — learned this the hard way once, not doing it again. It's in the file so every session starts knowing this.
-* **The file layout** — so new code has an obvious home instead of getting bolted onto whatever's open.
-* **A table of decisions already made** — refunds are their own entity, not a field tacked onto Payment — so that doesn't get re-litigated every session.
-* **The specific edge cases that always have to hold** — can't refund something that already failed, can't reuse an idempotency key with a different body.
-* **What's explicitly not in scope** — so it doesn't creep in on its own.
+* **Amounts are cents, integers, never floats.** Learned this the hard way once, not doing it again. It's in the file so every session starts knowing this.
+* **The file layout.** So new code has an obvious home instead of getting bolted onto whatever's open.
+* **A table of decisions already made.** Refunds are their own entity, not a field tacked onto Payment, so that doesn't get re-litigated every session.
+* **The specific edge cases that always have to hold.** Can't refund something that already failed, can't reuse an idempotency key with a different body.
+* **What's explicitly not in scope.** So it doesn't creep in on its own.
 
 None of this makes the model smarter. It just means I stop paying the same tax every session, and the calls I already made stay made.
 
