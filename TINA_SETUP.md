@@ -67,7 +67,7 @@ Update your `.env.local` file with the real credentials:
 ```bash
 # Replace placeholder values with real ones from Tina Cloud
 VITE_TINA_CLIENT_ID=your_actual_client_id
-VITE_TINA_TOKEN=your_actual_token
+TINA_TOKEN=your_actual_token
 ```
 
 ### 5. Configure GitHub Secrets (2 minutes)
@@ -178,6 +178,15 @@ After setup, verify:
 **Solution**:
 - Make sure `.env.local` has real Tina Cloud credentials (not placeholders)
 - For GitHub Actions, verify secrets are set in repository settings
+
+### "Project not found" Error
+
+**Problem**: Tina Cloud returns 404 when checking client information.
+
+**Solution**:
+- Verify `VITE_TINA_CLIENT_ID` matches the client ID of the Tina Cloud project connected to this repository.
+- Verify the read-only token belongs to that project and the configured branch exists.
+- Remove any accidental whitespace when saving the GitHub secrets.
 
 ### Admin Interface Shows 404
 
