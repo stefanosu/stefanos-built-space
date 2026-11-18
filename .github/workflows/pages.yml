@@ -30,7 +30,7 @@ jobs:
         env:
           VITE_ADMIN_PASSWORD_HASH: ${{ secrets.VITE_ADMIN_PASSWORD_HASH }}
           VITE_TINA_CLIENT_ID: ${{ secrets.VITE_TINA_CLIENT_ID }}
-          VITE_TINA_TOKEN: ${{ secrets.VITE_TINA_TOKEN }}
+          TINA_TOKEN: ${{ secrets.VITE_TINA_TOKEN }}
 
       # Prevent Jekyll from munging files
       - run: touch dist/.nojekyll
