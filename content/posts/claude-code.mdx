@@ -1,12 +1,15 @@
-import { BlogPost } from "../types";
-
-const post: BlogPost = {
-  slug: "claude-code",
-  title:
-    "I Built a Toy Payment Processor With Claude Code — Here's What That Workflow Actually Looked Like",
-  excerpt:
-    "I built a toy payment processor with Claude Code to explore what AI-assisted engineering actually looks like when the design decisions stay yours. Here's how three real payment-system tradeoffs — charge outcomes, refund modeling, and idempotency — got made, and what the back-and-forth with Claude Code actually looked like in practice.",
-  content: `
+---
+title: I Built a Toy Payment Processor With Claude Code — Here's What That Workflow Actually Looked Like
+slug: claude-code
+excerpt: I built a toy payment processor with Claude Code to explore what AI-assisted engineering actually looks like when the design decisions stay yours. Here's how three real payment-system tradeoffs — charge outcomes, refund modeling, and idempotency — got made, and what the back-and-forth with Claude Code actually looked like in practice.
+date: 2026-07-01
+readTime: 7 min read
+tags:
+  - Claude Code
+  - AI-Assisted Engineering
+  - TypeScript
+  - Software Design
+---
 
 I've been experimenting with Claude Code for a while now. Not just using it to ship faster, but trying to understand how it actually fits into a real engineering workflow. There's a difference between using AI as a shortcut and using it as a thinking partner, and I wanted to see what the second thing actually looks like in practice.
 
@@ -110,10 +113,3 @@ I knew auth, persistence, and multi-currency were out. I just didn't write that 
 The thing I keep coming back to: having a solid design doc made the Claude Code workflow more useful, not less. Because I knew what I was trying to decide, and why, I could actually evaluate the options instead of just picking whatever came first. The judgment stayed mine. The scaffolding work didn't have to.
 
 At this scale that's what using the tool well looks like. The decisions that actually matter (which tradeoff to accept, which pattern fits, which complexity hasn't been earned) are still engineering calls. Claude Code just meant I wasn't doing the surrounding work alone.
-    `,
-  date: "2026-07-01",
-  readTime: "7 min read",
-  tags: ["Claude Code", "AI-Assisted Engineering", "TypeScript", "Software Design"],
-};
-
-export default post;

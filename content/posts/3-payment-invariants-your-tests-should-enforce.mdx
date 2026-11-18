@@ -1,11 +1,15 @@
-import { BlogPost } from "../types";
-
-const post: BlogPost = {
-  slug: "3-payment-invariants-your-tests-should-enforce",
-  title: "3 Payment Invariants Your Tests Should Enforce",
-  excerpt:
-    "I'm still working through how to use Claude Code on real builds without outsourcing the thinking. This week that meant writing tests for the toy payment processor — and figuring out how to make domain knowledge stick between prompts.",
-  content: `
+---
+title: 3 Payment Invariants Your Tests Should Enforce
+slug: 3-payment-invariants-your-tests-should-enforce
+excerpt: I'm still working through how to use Claude Code on real builds without outsourcing the thinking. This week that meant writing tests for the toy payment processor — and figuring out how to make domain knowledge stick between prompts.
+date: 2026-07-08
+readTime: 5 min read
+tags:
+  - Claude Code
+  - Testing
+  - Payments
+  - TypeScript
+---
 
 I'm still working through how to use Claude Code on real builds without outsourcing the thinking. This week that meant writing tests for the toy payment processor.
 
@@ -141,11 +145,3 @@ Claude's first version of that error just said "refund exceeds balance." I had i
 ## Takeaways
 
 The tests are useful but the workflow is what I actually learned this week. Domain knowledge belongs in CLAUDE.md, not in prompts I have to remember to repeat. Conventions like "test both directions" quietly fix a whole category of lazy test suites. And the judgment calls, like reject vs. return on a key mismatch, were still mine to make. Claude Code didn't know that a mismatched idempotency key means a client-side bug. I knew that from doing this work for years. The tool just made it fast to turn that into tests.
-
-`,
-  date: "2026-07-08",
-  readTime: "5 min read",
-  tags: ["Claude Code", "Testing", "Payments", "TypeScript"],
-};
-
-export default post;

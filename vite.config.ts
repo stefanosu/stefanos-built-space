@@ -7,6 +7,7 @@ import { componentTagger } from "lovable-tagger";
 /**
  * Vite plugin to generate posts-meta.json at build time.
  * This file is used by the Cloudflare Worker to inject OG tags dynamically.
+ * Updated to read from MDX files in content/posts directory.
  */
 function generatePostsMeta(): Plugin {
   return {
@@ -14,36 +15,40 @@ function generatePostsMeta(): Plugin {
     writeBundle: {
       sequential: true,
       handler: async () => {
-        const postsDir = path.resolve(__dirname, "src/data/posts");
+        const postsDir = path.resolve(__dirname, "content/posts");
         const distDir = path.resolve(__dirname, "dist");
-        const postFiles = fs.readdirSync(postsDir).filter((f) => f.endsWith(".ts"));
+        const postFiles = fs.readdirSync(postsDir).filter((f) => f.endsWith(".mdx"));
 
         const posts: Record<string, { title: string; description: string; image: string }> = {};
 
         for (const file of postFiles) {
           const content = fs.readFileSync(path.join(postsDir, file), "utf-8");
 
+          // Parse YAML frontmatter from MDX files
+          const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+          if (!frontmatterMatch) continue;
+
+          const frontmatter = frontmatterMatch[1];
+
           // Extract slug
-          const slugMatch = content.match(/slug:\s*["']([^"']+)["']/);
+          const slugMatch = frontmatter.match(/slug:\s*(.+)/);
           if (!slugMatch) continue;
-          const slug = slugMatch[1];
+          const slug = slugMatch[1].trim();
 
-          // Extract title - handle multi-line with template strings
-          const titleMatch = content.match(/title:\s*\n?\s*["'](.+?)["'],?\s*\n/s) ||
-            content.match(/title:\s*["'](.+?)["']/);
-          const title = titleMatch ? titleMatch[1].replace(/\s+/g, " ").trim() : slug;
+          // Extract title
+          const titleMatch = frontmatter.match(/title:\s*(.+)/);
+          const title = titleMatch ? titleMatch[1].trim().replace(/^["']|["']$/g, "") : slug;
 
-          // Extract excerpt (used as description) - handle multi-line
-          const excerptMatch = content.match(/excerpt:\s*\n?\s*["'](.+?)["'],?\s*\n/s) ||
-            content.match(/excerpt:\s*["'](.+?)["']/);
+          // Extract excerpt (description)
+          const excerptMatch = frontmatter.match(/excerpt:\s*(.+)/);
           const description = excerptMatch
-            ? excerptMatch[1].replace(/\s+/g, " ").trim()
+            ? excerptMatch[1].trim().replace(/^["']|["']$/g, "")
             : "";
 
           // Check for ogImage field, fallback to default
-          const imageMatch = content.match(/ogImage:\s*["']([^"']+)["']/);
+          const imageMatch = frontmatter.match(/ogImage:\s*(.+)/);
           const image = imageMatch
-            ? imageMatch[1]
+            ? imageMatch[1].trim().replace(/^["']|["']$/g, "")
             : "https://stefanosugbit.com/og-preview.png";
 
           posts[slug] = { title, description, image };

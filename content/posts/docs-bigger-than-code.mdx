@@ -1,12 +1,15 @@
-import { BlogPost } from "../types";
-
-const post: BlogPost = {
-  slug: "docs-bigger-than-code",
-  title:
-    "My Docs Folder Was Bigger Than My Code — How I Cut What My AI Has to Read by About 60%",
-  excerpt:
-    "About 5,000 lines of copied patterns sat next to about 2,500 lines of the actual project. By splitting patterns into a reference repo and keeping project repos lean, I reduced context size by 60% and made maintenance dramatically easier. Here's the hybrid pattern that made it work.",
-  content: `
+---
+title: My Docs Folder Was Bigger Than My Code — How I Cut What My AI Has to Read by About 60%
+slug: docs-bigger-than-code
+excerpt: About 5,000 lines of copied patterns sat next to about 2,500 lines of the actual project. By splitting patterns into a reference repo and keeping project repos lean, I reduced context size by 60% and made maintenance dramatically easier. Here's the hybrid pattern that made it work.
+date: 2026-11-18
+readTime: 8 min read
+tags:
+  - AI-Assisted Engineering
+  - Claude Code
+  - Developer Workflow
+  - Documentation
+---
 
 By project three, I had about 5,000 lines of copied patterns sitting next to about 2,500 lines of actual code. File searches were slower, project code was harder to find, and the docs had started to drift. Here's how I cut what my AI has to read by keeping patterns in one repo and pointing to them from every project.
 
@@ -156,10 +159,3 @@ Starting a new project now takes me a few minutes instead of 20 to 30. I make a 
 If you try it, I'd like to hear how it goes.
 
 **Code:** [ai-workflow-toolkit](https://github.com/stefanosu/ai-workflow-toolkit)
-    `,
-  date: "2026-11-18",
-  readTime: "8 min read",
-  tags: ["AI-Assisted Engineering", "Claude Code", "Developer Workflow", "Documentation"],
-};
-
-export default post;

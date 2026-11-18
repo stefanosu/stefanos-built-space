@@ -1,11 +1,15 @@
-import { BlogPost } from "../types";
+---
+title: The CLAUDE.md File I Should Have Written Sooner
+slug: the-claude-md-file-i-should-have-written-sooner
+excerpt: I didn't have a CLAUDE.md for the payment processor project until today. It's maybe 15 minutes to write, and it's worth it. Here's why, and here's exactly what mine looks like.
+date: 2026-07-15
+readTime: 4 min read
+tags:
+  - Claude Code
+  - AI-Assisted Engineering
+  - Workflow
+---
 
-const post: BlogPost = {
-  slug: "the-claude-md-file-i-should-have-written-sooner",
-  title: "The CLAUDE.md File I Should Have Written Sooner",
-  excerpt:
-    "I didn't have a CLAUDE.md for the payment processor project until today. It's maybe 15 minutes to write, and it's worth it. Here's why, and here's exactly what mine looks like.",
-  content: `
 I actually didn't have a CLAUDE.md for the payment processor project that I was building until today. I just made mine this afternoon, and I should've done it much sooner because the CLAUDE.md file is the source of truth needed to make things more efficient as you build out a project. I usually have one in my other projects. I forgot it I think in part because of how simple this project is, but even in this case it's needed.
 
 Anthropic's own docs describe it as a plain markdown file that you drop in your project root that Claude Code reads automatically at the start of every session. No pasting it in, no reminding it's there. It becomes part of the context the model already has before you type a single thing: your build/test commands, coding conventions, architecture calls you've already made, stuff to avoid. Basically the onboarding doc you can always refer to, which saves you time and cost because you're not re-explaining the same context in every conversation. That repeated back-and-forth adds up to more tokens over time than one persistent file would.
@@ -81,10 +85,3 @@ A few things worth calling out:
 None of this makes the model smarter. It just means I stop paying the same tax every session, and the calls I already made stay made.
 
 If you're deep into a Claude Code project without one of these, it's maybe 15 minutes to write. It's worth it as you build out your project.
-  `,
-  date: "2026-07-15",
-  readTime: "4 min read",
-  tags: ["Claude Code", "AI-Assisted Engineering", "Workflow"],
-};
-
-export default post;

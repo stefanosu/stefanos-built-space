@@ -1,11 +1,15 @@
-import { BlogPost } from "../types";
+---
+title: "Controllers or Services: Where Should Orchestration Live?"
+slug: controllers-or-services-where-should-orchestration-live
+excerpt: "Exploring a common architectural dilemma in Clean Architecture: should complex business logic live in controllers or a dedicated service layer? A practical look at the trade-offs while building a personal finance tracker."
+date: 2025-07-09
+readTime: 4 min read
+tags:
+  - Clean Architecture
+  - Software Design
+  - .NET
+---
 
-const post: BlogPost = {
-  slug: "controllers-or-services-where-should-orchestration-live",
-  title: "Controllers or Services: Where Should Orchestration Live?",
-  excerpt:
-    "Exploring a common architectural dilemma in Clean Architecture: should complex business logic live in controllers or a dedicated service layer? A practical look at the trade-offs while building a personal finance tracker.",
-  content: `
 ## Where Should Complex Business Logic Live in Clean Architecture?
 
 While building my personal finance tracker, I faced a common architectural dilemma: where should complex business logic live in Clean Architecture?
@@ -43,10 +47,3 @@ In Scenario B, the business logic is better separated from the controllers:
 As a solo developer, testability and clarity matter more to me than squeezing out performance. I'd rather centralize business logic now than untangle it later. So I'm leaning toward the service layer approach — cleaner boundaries, more flexibility. But I'm also staying open to change if the abstraction starts to feel like overkill.
 
 Curious how others approach this — especially if you've built solo or in small teams. Where do you draw the line between controller and service?
-    `,
-  date: "2025-07-09",
-  readTime: "4 min read",
-  tags: ["Clean Architecture", "Software Design", ".NET"],
-};
-
-export default post;

@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 .env
 .history/
+
+# Tina CMS
+.tina/__generated__
+public/admin

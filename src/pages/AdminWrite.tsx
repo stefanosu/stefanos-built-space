@@ -1,53 +1,30 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, Loader2, Pencil, Trash2 } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import PasswordGate from "@/components/admin/PasswordGate";
-import MarkdownRenderer from "@/components/MarkdownRenderer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { BlogPost } from "@/data/types";
-import {
-  fetchPosts,
-  fetchPost,
-  savePost,
-  deletePost,
-  PostsApiError,
-  type PostMeta,
-} from "@/lib/postsApi";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
-const PASSWORD_STORAGE_KEY = "admin-password";
+/**
+ * Legacy admin route - redirects to Tina CMS admin interface
+ * This component exists to maintain compatibility with old bookmarks/links
+ */
+const AdminWrite = () => {
+  const navigate = useNavigate();
 
-function slugify(input: string): string {
-  return input
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-}
+  useEffect(() => {
+    // Redirect to Tina CMS admin
+    window.location.href = "/admin/index.html";
+  }, []);
 
-function estimateReadTime(markdown: string): string {
-  const words = markdown.trim().split(/\s+/).filter(Boolean).length;
-  const minutes = Math.max(1, Math.round(words / 200));
-  return `${minutes} min read`;
-}
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+        <p className="text-muted-foreground">Redirecting to admin panel...</p>
+      </div>
+    </div>
+  );
+};
 
-const emptyForm = {
-  originalSlug: null as string | null,
-  slug: "",
-  title: "",
-  excerpt: "",
-  content: "",
-  date: new Date().toISOString().slice(0, 10),
-  readTime: "",
-  tagsInput: "",
+export default AdminWrite;
 };
 
 type Status =

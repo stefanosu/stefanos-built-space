@@ -1,11 +1,16 @@
-import { BlogPost } from "../types";
+---
+title: "Testing Your Architecture Decisions: How Service Layer Orchestration Changes Your Testing Strategy"
+slug: testing-your-architecture-decisions
+excerpt: Part 2 of my personal finance tracker series. Moving to service layer orchestration doesn't just change your code structure—it fundamentally changes your entire testing strategy. Here's what I learned.
+date: 2025-07-16
+readTime: 12 min read
+tags:
+  - Testing
+  - Clean Architecture
+  - .NET
+  - Software Design
+---
 
-const post: BlogPost = {
-  slug: "testing-your-architecture-decisions",
-  title: "Testing Your Architecture Decisions: How Service Layer Orchestration Changes Your Testing Strategy",
-  excerpt:
-    "Part 2 of my personal finance tracker series. Moving to service layer orchestration doesn't just change your code structure—it fundamentally changes your entire testing strategy. Here's what I learned.",
-  content: `
 *Part 2 of my personal finance tracker development series*
 
 In my previous post, I decided to move complex business logic from controllers into a dedicated service layer. The ExpenseService now handles the orchestration of validating users, checking accounts, verifying categories, and creating transactions.
@@ -275,10 +280,3 @@ The key insight: architectural decisions don't just affect code organization—t
 Would I make the same choice again? Absolutely. But I'd budget more time upfront for setting up proper test infrastructure and mock management patterns.
 
 Building in public as a solo developer has its challenges, but the testing clarity from this architecture choice has been worth the extra setup. What's your take on the unit vs integration testing balance?
-    `,
-  date: "2025-07-16",
-  readTime: "12 min read",
-  tags: ["Testing", "Clean Architecture", ".NET", "Software Design"],
-};
-
-export default post;
