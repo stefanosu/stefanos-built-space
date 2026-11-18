@@ -155,7 +155,7 @@ Starting a new project now takes me a few minutes instead of 20 to 30. I make a 
 
 If you try it, I'd like to hear how it goes.
 
-**Code:** [ai-workflow-toolkit](https://github.com/sugbit/ai-workflow-toolkit)
+**Code:** [ai-workflow-toolkit](https://github.com/stefanosu/ai-workflow-toolkit)
     `,
   date: "2026-11-18",
   readTime: "8 min read",
