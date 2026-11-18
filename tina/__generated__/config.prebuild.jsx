@@ -6,7 +6,7 @@ var config_default = defineConfig({
   // Get this from tina.io
   clientId: process.env.VITE_TINA_CLIENT_ID,
   // Get this from tina.io
-  token: process.env.VITE_TINA_TOKEN,
+  token: process.env.TINA_TOKEN,
   build: {
     outputFolder: "admin",
     publicFolder: "public"
