@@ -1,0 +1,165 @@
+import { BlogPost } from "../types";
+
+const post: BlogPost = {
+  slug: "docs-bigger-than-code",
+  title:
+    "My Docs Folder Was Bigger Than My Code — How I Cut What My AI Has to Read by About 60%",
+  excerpt:
+    "About 5,000 lines of copied patterns sat next to about 2,500 lines of the actual project. By splitting patterns into a reference repo and keeping project repos lean, I reduced context size by 60% and made maintenance dramatically easier. Here's the hybrid pattern that made it work.",
+  content: `
+
+By project three, I had about 5,000 lines of copied patterns sitting next to about 2,500 lines of actual code. File searches were slower, project code was harder to find, and the docs had started to drift. Here's how I cut what my AI has to read by keeping patterns in one repo and pointing to them from every project.
+
+## The problem
+
+I build with AI tools every day. Claude, Copilot, all of it. Around my third project, things started to feel slow.
+
+My workflow for a new project looked like this:
+
+1. Start the project
+2. Copy the \`docs/\` folder from the last one (testing patterns, database guides, error handling templates)
+3. Paste it in
+4. Start coding
+
+It felt efficient. It wasn't.
+
+By project three, file searches were slower. Project code was harder to find. The docs were duplicated everywhere, and the copies had started to drift. Project 1 tested one way. Project 3 had evolved.
+
+The numbers:
+- **Project 1:** ~35 files, ~5,000 lines
+- **Project 3:** ~41 files, ~8,000 lines
+
+That's about 60% more for the AI to wade through, and most of it was generic patterns, not my actual code.
+
+## Context is a resource
+
+I started treating the context window like memory or CPU. Fewer files means faster searches. Less noise means more relevant results. And the AI gives better suggestions when it's looking at my code instead of a pile of docs.
+
+But I still needed the patterns. Testing guides, database practices, error handling templates. I just didn't need a copy of them in every repo.
+
+## The hybrid pattern
+
+I split things into two kinds of repos.
+
+**ai-workflow-toolkit** is the reference repo. It holds the patterns:
+
+\`\`\`
+ai-workflow-toolkit/
+├── templates/
+│   ├── DECISION_LOG_TEMPLATE.md
+│   └── DECISION_LOG_GUIDE.md
+├── language-guides/
+│   ├── PYTHON.md
+│   ├── TYPESCRIPT.md
+│   ├── GO.md
+│   └── RUST.md
+└── processes/
+    └── BEST_PRACTICES.md
+\`\`\`
+
+Each project repo stays lean. It has a short \`CLAUDE.md\` that points to the toolkit, plus its own decisions and code:
+
+\`\`\`
+contract-qa/
+├── CLAUDE.md
+├── docs/
+│   └── decisions/
+│       └── 001-use-pgvector.md
+└── src/
+\`\`\`
+
+Here's the \`CLAUDE.md\` from contract-qa:
+
+\`\`\`markdown
+# CLAUDE.md
+
+## Project Summary
+Legal contract Q&A system with RAG and pgvector...
+
+## Patterns Reference
+This project follows patterns from ai-workflow-toolkit:
+- Language: language-guides/PYTHON.md
+- Decision logs: templates/DECISION_LOG_TEMPLATE.md
+- Testing: language-guides/PYTHON.md#testing
+
+## Project-Specific Rules
+1. Every answer must cite document, page, section
+2. Never edit evals/questions.yaml
+3. Ask before adding dependencies
+\`\`\`
+
+The AI reads that small file first. When it needs pattern guidance, it opens the right toolkit file. Otherwise it stays focused on the project.
+
+## What changed
+
+On contract-qa:
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Files | 41 | 35 |
+| Lines | ~8,000 | ~3,000 |
+| Find a project file | ~3-4s | ~1-2s |
+
+The search times are rough, not a benchmark. The bigger win was that results felt cleaner. Less generic noise, more of my own code.
+
+The maintenance win was easier to measure. Before, updating a testing pattern meant opening every project and editing each one. About 5 minutes per project. With five projects, that's 25 minutes and a real chance I'd miss one. Now I edit the toolkit once. 5 minutes, and every project points at the same source.
+
+It also fixed the drift. Before, one project kept fixtures in \`conftest.py\`, another in \`tests/fixtures/\`, and a third used something I'd just learned. Now there's one place to look.
+
+It works across languages too. I write Python, TypeScript, Go and Rust. The toolkit has one guide per language covering the same ideas (config, testing, error handling, logging) done the way each language does them. Each project's \`CLAUDE.md\` points at the right one.
+
+## The bonus: the repo is my presentation
+
+I wanted to give a talk about how I work. With this setup, I can clone the toolkit, walk through the language guides, and show the decision log templates live. No slides to rebuild.
+
+Same for writing. I can link to the real file instead of pasting a snapshot that goes stale. This post is a good example. I didn't have to dig patterns out of old projects. I opened the toolkit and linked to it.
+
+## What it costs
+
+It's not free.
+
+- **It's an external dependency.** Delete the toolkit and the references break. I keep it somewhere stable and treat it like any other dependency.
+- **It takes discipline.** You have to reference the toolkit instead of copying patterns in. A checklist item when starting a project fixes this. It got automatic after 2 or 3 projects.
+- **New contributors need to know about it.** I link it in the README, and \`CLAUDE.md\` makes the references explicit.
+- **The project repo isn't self-contained.** I'm fine with that. The project repo tells the project story. The toolkit tells the patterns story.
+
+## When not to use it
+
+Skip it if you:
+
+- have one standalone project
+- never reuse patterns
+- don't use AI tools
+- need the repo fully self-contained
+- are publishing a template people will fork
+
+It's worth it if you have multiple projects, use AI tools, want consistency, work in more than one language, or write and present about how you work.
+
+## How to start
+
+1. **Make a toolkit repo.** Start tiny. One pattern you already use every time.
+2. **Move what you keep copying.** Testing setup, database connections, error handling, logging. Write down why, not just how.
+3. **Add a short \`CLAUDE.md\` to each project.** A summary, links to the patterns it follows, and rules that only apply to that project.
+4. **Log decisions.** When you make a real one, copy the decision log template into the project's \`docs/decisions/\`. Future you will be glad. It's also great material for talks.
+5. **Keep going.** Notice a pattern, add it. Improve one, update it once and every project gets it.
+
+Starting a new project now takes me a few minutes instead of 20 to 30. I make a folder, write a \`CLAUDE.md\` that points at the toolkit, copy the decision log template, and start coding.
+
+## Takeaways
+
+- Treat your context window like a resource
+- Keep project code in project repos and patterns in a pattern repo
+- Update once, benefit everywhere
+- Start small
+- Measure it: context size, maintenance time, consistency
+
+If you try it, I'd like to hear how it goes.
+
+**Code:** [ai-workflow-toolkit](https://github.com/sugbit/ai-workflow-toolkit)
+    `,
+  date: "2026-11-18",
+  readTime: "8 min read",
+  tags: ["AI-Assisted Engineering", "Claude Code", "Developer Workflow", "Documentation"],
+};
+
+export default post;
